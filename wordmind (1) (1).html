@@ -1,0 +1,3905 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WORDMIND AI</title>
+<style>
+:root{--bg:#0b0b10;--card:#16161d;--card2:#1f1f29;--tx:#f4f4f6;--mu:#8b8b99;--ac:#c8ff4d;--acx:#10140a;--ok:#4cff7a;--no:#ff5a5f;--cy:#4dffdf;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f5f5f8;--card:#fff;--card2:#ecedf3;--tx:#14141c;--mu:#6b6b7a;--ac:#6d4aff;--acx:#fff}}
+:root[data-theme="light"]{--bg:#f5f5f8;--card:#fff;--card2:#ecedf3;--tx:#14141c;--mu:#6b6b7a;--ac:#6d4aff;--acx:#fff}
+html,body{margin:0;height:100%}*{box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 96px}
+h1{font-size:26px;margin:4px 0 2px}h2{font-size:20px;margin:18px 0 10px}.mu{color:var(--mu);font-size:14px}
+.card{background:var(--card);border-radius:20px;padding:18px;margin:10px 0;box-shadow:0 2px 12px #0003}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:15px;font-size:16px;font-weight:700;background:var(--ac);color:var(--acx);cursor:pointer;margin:8px 0;transition:transform .1s}
+.btn:active{transform:scale(.98)}.btn.g{background:var(--card2);color:var(--tx)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.big{font-size:38px;font-weight:800;text-align:center;margin:10px 0}
+.opt{display:block;width:100%;text-align:left;background:var(--card2);color:var(--tx);border:2px solid transparent;border-radius:14px;padding:14px;margin:8px 0;font-size:16px;cursor:pointer}
+.opt.ok{border-color:var(--ok)}.opt.no{border-color:var(--no)}
+input,textarea{width:100%;background:var(--card2);color:var(--tx);border:0;border-radius:14px;padding:14px;font-size:16px;font-family:inherit}
+textarea{min-height:120px}
+.bar{height:10px;background:var(--card2);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac);border-radius:9px;transition:width .6s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--card);border-radius:18px;padding:14px}.stat b{font-size:26px;display:block}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}.chip{background:var(--card2);border:0;color:var(--tx);border-radius:20px;padding:8px 14px;white-space:nowrap}.chip.on{background:var(--ac);color:var(--acx)}
+.w{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--card2)}
+.sp{background:var(--card2);border:0;color:var(--tx);border-radius:50%;width:42px;height:42px;font-size:18px;cursor:pointer;flex:none}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--card2)}
+nav button{background:none;border:0;color:var(--mu);font-size:12px;padding:6px 8px;flex:1}nav button.on{color:var(--ac);font-weight:700}nav span{display:block;font-size:20px}
+#toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+</style></head><body>
+<div id="app"></div><div id="toast"></div>
+<nav id="nav"></nav>
+<script>
+const SEED=`Essential 1 · Unit 1
+afraid - qo'rqqan, cho'chigan
+agree - fikriga qo'shilmoq
+angry - jahli chiqqan
+arrive - yetib kelmoq
+attack - hujum qilmoq
+bottom - tagi, pasti
+clever - aqilli, ziyrak
+cruel - shafqatsiz
+finally - ahiyri, vanihoyat
+hide - yashirinmoq
+hunt - ov qilmoq
+lot - juda ko'p
+middle - o'rta, markaz
+moment - sekund, on
+pleased - hursand, mamnun
+promise - va'da bermoq
+reply - javob bermoq
+safe - hafsiz, behatar
+trick - hiyla, nayrang
+well - yaxshi`;
+const PACKS={b1_2_9:`Essential 1 · Unit 2
+adventure - sarguzasht
+approach - yaqin kelmoq
+carefully - e'tibor bilan
+chemical - kimyoviy modda
+create - yaratmoq, yasamoq
+evil - yomon, yovuz
+experiment - tajriba, sinov
+kill - o'ldirmoq
+laboratory - labaratoriya
+laugh - kulgi
+loud - shovqinli, baland
+nervous - xavotirlangan
+noise - shovqin
+project - loyiha, yumush
+scare - qo'rqitmoq
+secret - sir
+shout - baqirmoq, qichqirmoq
+smell - hidlamoq
+terrible - juda yomon
+worse - yomonroq
+Essential 1 · Unit 3
+alien - o'zga sayyoralik
+among - orasida, ichida
+chart - grafik jadval, diagramma
+cloud - bulut
+comprehend - tushunmoq
+describe - ta'riflamoq
+ever - qachon bo'lsa ham
+fail - muvaffaqiyatsizlikka uchramoq
+friendly - do'stona, mehribon
+grade - baho
+instead - o'rniga
+library - kutubxona
+planet - sayyora
+report - hisobot
+several - bir nechta, bir talay
+solve - hal qilmoq, yechmoq
+suddenly - to'satdan, birdaniga
+suppose - faraz qilmoq
+universe - olam, koinot
+view - ko'rmoq, qaramoq
+Essential 1 · Unit 4
+appropriate - mos, to'g'ri
+avoid - yaqinlashmaslik
+behave - o'zini tutmoq
+calm - hotirjam
+concern - tashvish, g'am
+content - hursand, shod
+expect - umid qilmoq, kutmoq
+frequently - tez-tez
+habit - odat
+instruct - ko'rsatma bermoq
+issue - masala, muammo
+none - hech qancha
+patient - sabrli, toqatli
+positive - ijobiy
+punish - jazolamoq
+represent - vakil bo'lmoq
+shake - silkitmoq, siltamoq
+spread - tarqatmoq, surkamoq
+stroll - sayr qilmoq
+village - qishloq
+Essential 1 · Unit 5
+aware - xabardor, ogoh
+badly - yomon, jiddiy
+belong - tegishli bo'lmoq
+continue - davom ettirmoq
+error - xato
+experience - taassurot, kechinma
+field - keng maydon, dala
+hurt - jarohat yetkazmoq
+judgment - qaror, fikr
+likely - ehtimol, balki
+normal - odatiy, har doimgi
+rare - kamdan-kam, noyob
+relax - dam olmoq
+request - so'ramoq
+reside - istiqomat qilmoq
+result - natija, oqibat
+roll - yumalatmoq
+since - dan beri
+visible - ko'zga ko'rinadigan
+wild - yovvoyi
+Essential 1 · Unit 6
+advantage - ustun jihat, foyda
+cause - sabab bo'lmoq
+choice - tanlash imkoniyati
+community - jamiyat, jamoa
+dead - o'lgan, o'lik
+distance - masofa
+escape - qochib qutilmoq
+face - duch kelmoq
+follow - ergashmoq, amal qilmoq
+fright - qo'rquv, vahima
+ghost - arvoh
+individual - individ, kishi
+pet - uy hayvoni
+reach - yetib bormoq
+return - qaytib kelmoq
+survive - tirik qolmoq
+upset - xafa, tushkun
+voice - ovoz, tovush
+weather - ob-havo
+wise - aqlli, dono
+Essential 1 · Unit 7
+allow - ruxsat bermoq
+announce - e'lon qilmoq
+beside - yonma-yon
+challenge - qiyinchilik
+claim - tasdiqlamoq
+condition - holat, ahvol
+contribute - hissa qo'shmoq
+difference - farq, tafovut
+divide - taqsimlamoq, bo'lmoq
+expert - ekspert, mutaxassis
+famous - mashhur
+force - kuch, qudrat
+harm - jabr, jarohat
+lay - qo'ymoq
+peace - tinchlik
+prince - shahzoda
+protect - himoya qilmoq
+sense - his qilmoq
+sudden - to'satdan, kutilmaganda
+therefore - shuning uchun
+Essential 1 · Unit 8
+accept - qabul qilmoq
+arrange - tartibga keltirmoq
+attend - bormoq, qatnashmoq
+balance - muvozanat saqlamoq
+contrast - katta farq
+encourage - ruhlantirmoq
+familiar - tanish, qadrdon
+grab - uzmoq, olmoq
+hang - osmoq, ilmoq
+huge - katta, ulkan
+necessary - kerak, zarur
+pattern - uslub, yo'nalish
+propose - taklif qilmoq
+purpose - maqsad
+release - qo'yib yubormoq
+require - talab qilmoq
+single - bitta, bir dona, yolg'iz
+success - muvaffaqiyat
+tear - yirtmoq
+theory - nazariya
+Essential 1 · Unit 9
+against - qarama-qarshi
+beach - sohil
+damage - shikastlamoq
+discover - kashf qilmoq
+emotion - ruhiy kechinma
+fix - tuzatmoq, ta'mirlamoq
+frank - ochiq, samimiy
+identify - tanib bilmoq
+island - orol
+ocean - okean
+perhaps - ehtimol, balki
+pleasant - yoqimli
+prevent - to'sqinlik qilmoq
+rock - tosh
+save - asramoq, saqlamoq
+step - yurmoq, qadam
+still - haliyam
+taste - maza, ta'm
+throw - uloqtirmoq, otmoq
+wave - to'lqin, mavj`,b1_10_21:`Essential 1 · Unit 10
+benefit - foyda, ustun jihat
+certain - ishonchi komil
+chance - imkoniyat
+effect - ta'sir, samara
+essential - juda muhim, zarur
+far - uzoq, olis
+focus - diqqatini qaratmoq
+function - funksiya, vazifa
+grass - maysa, o't
+guard - qo'riqlamoq
+image - rasm, ko'rinish
+immediate - tezkor
+primary - asosiy, birinchi darajali
+proud - faxrlanmoq
+remain - qolmoq
+rest - dam olmoq
+separate - alohida, ajralgan
+site - joy
+tail - dum
+trouble - muammo, qiyinchilik
+Essential 1 · Unit 11
+anymore - ortiq, boshqa
+asleep - uxlayotgan, uyquda
+berry - malina
+collect - to'plamoq, yig'moq
+compete - musobaqalashmoq
+conversation - suhbat, muloqot
+creature - jonivor, mavjudot
+decision - qaror
+either - ikkisidan biri
+forest - o'rmon
+ground - yer
+introduce - tanishtirmoq
+marry - turmush qurmoq
+prepare - tayyorlanmoq
+sail - qayiqda suzmoq
+serious - jiddiy, og'ir
+spend - o'tkazmoq
+strange - g'alati, noodatiy
+truth - haqiqat
+wake - uyg'onmoq
+Essential 1 · Unit 12
+alone - yolg'iz
+apartment - kvartira
+article - maqola
+artist - rassom
+attitude - munosabat
+compare - taqqoslamoq
+judge - baho bermoq
+magazine - jurnal
+material - material, xom-ashyo
+meal - ovqatlanish payti, taom
+method - metod, usul
+neighbour - qo'shni
+professional - kasbiy, professional
+profit - foyda
+quality - sifat
+shape - shakl
+space - bo'sh joy
+stair - zina
+symbol - ramz, belgi
+thin - oriq, ozg'in
+Essential 1 · Unit 13
+blood - qon
+burn - olovda yonmoq
+cell - kamera (turmada)
+contain - o'z ichiga olmoq
+correct - to'g'ri, bexato
+crop - hosil, o'rim
+demand - talab qilmoq
+equal - teng, barobar
+feed - ovqatlantirmoq
+hole - teshik, chuqurcha
+increase - oshirmoq, ko'tarmoq
+lord - lord
+owe - qarz bo'lmoq
+position - pozitsiya, holat
+raise - ko'tarmoq
+responsible - mas'uliyatli
+sight - manzara
+spot - joy, makon
+structure - tuzilish
+whole - barcha, butun
+Essential 1 · Unit 14
+coach - murabbiy, trener
+control - nazorat qilmoq
+description - ta'rif, tavsif
+direct - to'g'ridan-to'g'ri
+exam - imtihon
+example - misol, namuna
+limit - me'yor
+local - mahalliy
+magical - sehrli, sirli
+mail - xat, pochta
+novel - roman
+outline - reja
+poet - shoir
+print - qog'ozga tushirmoq
+scene - sahna, epizod
+sheet - varaq
+silly - ahmoqona
+store - do'kon, omborxona
+suffer - azoblanmoq
+technology - texnologiya
+Essential 1 · Unit 15
+across - narigi tomoniga
+breathe - nafas olmoq
+characteristic - xususiyat
+consume - iste'mol qilmoq
+excite - hayajonga solmoq
+extreme - keskin, shiddatli
+fear - qo'rquv
+fortunate - omadli
+happen - nasib qilmoq
+length - uzunlik
+mistake - xato
+observe - kuzatmoq
+opportunity - imkoniyat
+prize - mukofot, sovrin
+race - poyga
+realize - fahmlamoq
+respond - javob qaytarmoq
+risk - tavakkal
+wonder - bilishni xohlamoq
+yet - haliyam
+Essential 1 · Unit 16
+academy - akademiya
+ancient - qadimiy
+board - taxta
+century - asr
+clue - ashyoviy dalil
+concert - konsert
+county - okrug
+dictionary - lug'at
+exist - mavjud bo'lmoq
+flat - tekis, silliq
+gentleman - jentlmen
+hidden - yashirin
+maybe - balki, ehtimol
+officer - ofitser
+original - asl nusxasi
+pound - urmoq, qoqmoq
+process - jarayon
+publish - chop etmoq
+theater - teatr
+wealth - boylik
+Essential 1 · Unit 17
+appreciate - qadrlamoq
+available - mavjud, bor
+beat - yengmoq
+bright - yorqin
+celebrate - nishonlamoq
+determine - tanlamoq
+disappear - ko'rinmay ketmoq
+else - boshqa, o'zga
+fair - xolis, adolatli
+flow - oqmoq
+forward - oldinga
+hill - tepalik
+level - daraja
+lone - yolg'iz, yakka
+puddle - ko'lmak
+response - javob
+season - fasl, mavsum
+solution - yechim, javob
+waste - behuda sovurmoq
+whether - mi, yo bo'lmasa
+Essential 1 · Unit 18
+argue - bahslashmoq
+communicate - suhbat qurmoq
+crowd - omma, olomon
+depend - tegishli bo'lmoq
+dish - idish, tarelka
+empty - bo'sh
+exact - aniq
+fresh - yangi
+gather - to'plamoq
+indicate - ko'rsatmoq
+item - buyum, narsa
+offer - taklif qilmoq
+price - narx
+product - mahsulot
+property - mol-mulk
+purchase - sotib olmoq
+recommend - tavsiya qilmoq
+select - tanlamoq
+tool - asbob, anjom
+treat - munosabatda bo'lmoq
+Essential 1 · Unit 19
+alive - tirik, hayot
+bone - suyak
+bother - harakat qilmoq
+captain - kapitan
+conclusion - yakun, nihoya
+doubt - shubha
+explore - tadqiq etmoq
+foreign - chet
+glad - hursand
+however - lekin, ammo
+injustice - adolatsizlik
+international - xalqaro
+lawyer - huquqshunos
+mention - ta'kidlamoq
+policy - qonun
+social - ijtimoiy
+speech - nutq
+staff - jamoa, shtat
+toward - sari, tomon
+wood - yog'och
+Essential 1 · Unit 20
+achieve - erishmoq, olmoq
+advise - maslahat bermoq
+already - allaqachon
+basic - oddiy, sodda
+bit - bo'lak, parcha
+consider - haqida o'ylamoq
+destroy - vayron qilmoq
+entertain - hursand qilmoq
+extra - qo'shimcha
+goal - maqsad
+lie - aldamoq
+meat - go'sht
+opinion - fikr, mulohaza
+real - haqiqiy
+reflect - aks ettirmoq
+regard - deb hisoblamoq
+serve - xizmat ko'rsatmoq, tortmoq
+vegetable - sabzavot
+war - urush
+worth - arziydigan
+Essential 1 · Unit 21
+appear - dek tuyulmoq
+base - oddiy, asos, taglik
+brain - miya
+career - ish faoliyati
+clerk - do'kon yordamchisi
+effort - harakat, urinish
+enter - kirmoq
+excellent - juda yaxshi, a'lo
+hero - qahramon
+hurry - shoshilmoq
+inform - xabar bermoq
+later - keyinroq
+leave - tark etmoq, ketmoq
+locate - topmoq
+nurse - hamshira
+operation - operatsiya
+pain - og'riq
+refuse - rad etmoq
+though - ga qaramasdan
+various - turli-tuman`,b1_22_30:`Essential 1 · Unit 22
+actual - haqiqiy
+amaze - hayratda qoldirmoq
+charge - narx
+comfort - taskin bermoq, ovutmoq
+contact - aloqaga chiqmoq
+customer - haridor
+deliver - yetkazmoq
+earn - pul ishlab topmoq
+gate - darvoza
+include - o'z ichiga olmoq
+manage - boshqarmoq
+mystery - sir, jumboq
+occur - sodir bo'lmoq
+opposite - teskari, zid
+plate - likop
+receive - qabul qilmoq
+reward - mukofot, sovrin
+set - qo'ymoq, o'rnatmoq
+steal - o'g'irlamoq
+thief - o'g'ri
+Essential 1 · Unit 23
+advance - oldinga yurmoq
+athlete - sportchi
+average - o'rtacha
+behavior - xulq-atvor
+behind - orqasida
+course - kurs, dars
+lower - pasaymoq
+match - mos kelmoq
+member - a'zo
+mental - aqliy
+passenger - yo'lovchi
+personality - shaxsiyat
+poem - she'r
+pole - ustun, xoda
+remove - olib tashlamoq
+safety - xavfsizlik
+shoot - o'q uzmoq, otmoq
+sound - ovoz chiqarmoq
+swim - suzmoq
+web - o'rgimchak to'ri
+Essential 1 · Unit 24
+block - bo'lak
+cheer - qichqirmoq, ruhlantirmoq
+complex - murakkab
+critic - tanqidchi
+event - voqea, tadbir
+exercise - mashq qilmoq
+fit - mos kelmoq
+friendship - do'stlik
+guide - gid, yo'lboshchi
+lack - kamchilik
+passage - yo'lak
+perform - ijro etmoq
+pressure - bosim
+probable - ehtimol
+public - ijtimoiy, ommaviy
+strike - urmoq
+support - qo'llab-quvvatlamoq
+task - topshiriq, vazifa
+term - termin, so'z
+unite - birlashmoq
+Essential 1 · Unit 25
+associate - bog'lamoq
+environment - atrof-muhit
+factory - fabrika, zavod
+feature - xususiyat
+instance - misol, namuna
+involve - jalb qilmoq
+medicine - dori-darmon
+mix - aralashma
+organize - tashkil etmoq
+period - davr, zamon
+populate - yashamoq
+produce - ishlab chiqarmoq
+range - qator, miqdor
+recognize - tanimoq, bilmoq
+regular - muntazam
+sign - belgi, ishora
+tip - uch
+tradition - an'ana, udum
+trash - axlat
+wide - keng
+Essential 1 · Unit 26
+advice - maslahat
+along - bo'ylab
+attention - diqqat, e'tibor
+attract - tortmoq, jalb qilmoq
+climb - tirmashmoq, chirmashmoq
+drop - tomchilamoq
+final - oxirgi, so'ngi
+further - uzunroq, uzoqroq
+imply - nazarda tutmoq
+maintain - ayni holda saqlamoq
+neither - hech qaysisi
+otherwise - aks holda
+physical - jismoniy
+prove - isbotlamoq
+react - munosabat bildirmoq
+ride - haydamoq, minmoq
+situated - joylashgan
+society - jamiyat
+standard - me'zon
+suggest - taklif qilmoq
+Essential 1 · Unit 27
+actually - aslida
+bite - tishlash
+coast - sohil, qirg'oq
+deal - kelishuv, shartnoma
+desert - cho'l
+earthquake - zilzila
+effective - samarali
+false - xato
+examine - tekshirib ko'rmoq
+gift - sovg'a
+hunger - ochlik
+imagine - tasavvur qilmoq
+journey - sayohat
+puzzle - boshqotirma
+quite - juda, rosa
+rather - ma'qul ko'rmoq
+specific - aniq, muayyan
+tour - safar
+trip - sayohat
+value - qiymat, baho
+Essential 1 · Unit 28
+band - guruh
+barely - arang
+boring - zerikarli
+cancel - bekor qilmoq
+driveway - tratuar, yo'lak
+garbage - chiqindi, axlat
+instrument - asbob
+list - ro'yxat
+magic - sehr, jodu
+message - xabar
+notice - payqamoq
+own - egalik qilmoq
+predict - bashorat qilmoq
+professor - professor
+rush - shoshmoq
+schedule - jadval
+share - bo'lishmoq
+stage - sahna
+storm - bo'ron
+within - ichida
+Essential 1 · Unit 29
+advertise - reklama qilmoq
+assign - tayinlamoq
+audience - auditoriya
+breakfast - nonushta
+competition - musobaqa
+cool - salqin
+gain - olmoq
+importance - ahamiyat
+knowledge - bilim
+major - muhim
+mean - baxil, ziqna
+prefer - afzal ko'rmoq
+president - prezident
+progress - o'sish
+respect - hurmat
+rich - boy, badavlat
+skill - mahorat
+somehow - bir amallab
+strength - kuch, quvvat
+vote - ovoz bermoq
+Essential 1 · Unit 30
+above - tepasida
+ahead - old tarafida
+amount - miqdor
+belief - ishonch
+center - markaz
+common - odatiy
+cost - narx turmoq
+demonstrate - ko'rsatmoq
+different - turlicha
+evidence - dalil, isbot
+honesty - halollik
+idiom - ibora
+independent - mustaqil
+inside - ichki qism
+master - usta, master
+memory - xotira, yod
+proper - o'rinli, to'g'ri
+scan - qarab chiqmoq
+section - qism, bo'lim
+surface - yuza, sirt`,b2_1_15:`Essential 2 · Unit 1
+anxious - tashvishli
+awful - dahshatli
+consist - tashkil topmoq
+desire - xohish
+eager - ishtiyoqmand
+household - uy-joy
+intent - niyat
+landscape - manzara
+lift - ko'tarmoq
+load - yuk
+lung - o'pka
+motion - harakat
+pace - tezlik
+polite - muloyim
+possess - ega bo'lmoq
+rapidly - tezda
+remark - eslatma
+seek - izlamoq
+shine - porlamoq
+spill - to'kmoq
+Essential 2 · Unit 2
+bring - olib kelmoq
+castle - qal'a
+command - buyruq bermoq
+counsel - maslahat bermoq
+ensure - ishonch hosil qilmoq
+explosion - portlash
+jewelry - zargarlik buyumlari
+land - yer
+meteor - meteor
+monster - maxluq
+northern - shimoliy
+remote - uzoq
+southern - janubiy
+statue - haykal
+steam - bug'
+submit - taqdim etmoq, amal qilmoq
+temple - ibodatxona
+upper - yuqori
+weed - o't
+wing - qanot
+Essential 2 · Unit 3
+arrow - o'q
+battle - jang
+bow - kamon
+brave - jasur
+chief - boshliq
+disadvantage - zararli tomoni
+enemy - dushman
+entrance - kirish
+hardly - kamdan-kam
+intend - niyat qilmoq
+laughter - kulgu
+log - jurnal, yog'och
+military - harbiy
+obey - itoat qilmoq
+secure - xavfsiz, qo'lga kiritmoq
+steady - barqaror
+trust - ishonch
+twist - o'ramoq
+unless - agar ...masa
+weapon - qurol
+Essential 2 · Unit 4
+chest - ko'krak
+confidence - ishonch
+consequence - oqibat, natija
+disaster - falokat
+disturb - bezovta qilmoq
+estimate - baholamoq
+honor - hurmat, sharaf
+impress - taassurot qoldirmoq
+marathon - marafon
+narrow - tor
+pale - rangsiz
+rough - qo'pol
+satisfy - qoniqtirmoq
+scream - qichqirmoq
+sensitive - ta'sirchan
+shade - soya
+supplement - qo'shimcha
+terror - dahshat
+threat - tahdid
+victim - qurbon
+Essential 2 · Unit 5
+ancestor - ajdod
+angle - burchak
+boot - yuklash
+border - chegara
+congratulate - tabriklamoq
+frame - ramka
+heaven - jannat
+incredible - ajoyib
+legend - afsona
+praise - maqtamoq
+proceed - davom etmoq
+pure - sof, toza
+relative - nisbiy, qarindosh
+senior - katta
+silent - jim, tinch
+sink - cho'kmoq
+superior - ustun, katta
+surround - o'rab olmoq
+thick - qalin
+wrap - o'ramoq
+Essential 2 · Unit 6
+abroad - chet el
+anger - g'azab
+bride - kelin
+brief - qisqacha
+chase - ketidan quvmoq
+disappoint - ko'nglini qoldirmoq
+dive - sho'ng'imoq
+exchange - almashtirmoq
+favor - yaxshilik
+fee - haq
+forever - abadiy
+guy - yigit
+lovely - ajoyib
+mood - kayfiyat
+palace - saroy
+permit - ruxsat bermoq
+protest - norozilik qilmoq
+sculpture - haykal
+tribe - qabila
+youth - yoshlar
+Essential 2 · Unit 7
+basis - asos
+biology - biologiya
+cage - qafas
+colleague - hamkasb
+colony - koloniya
+debate - munozara
+depart - ketmoq
+depress - tushkunlikka solmoq
+factual - haqiqiy
+fascinate - hayratda qoldirmoq
+mission - missiya
+nevertheless - shunga qaramay
+occupation - istilo, kasb
+overseas - dengiz orti
+persuade - ishontirmoq
+route - yo'nalish
+ruins - xarobalar
+scholar - olim
+significant - muhim
+volcano - vulqon
+Essential 2 · Unit 8
+broad - keng
+bush - buta
+capable - qobiliyatli
+cheat - mug'ombirlik qilmoq
+concentrate - fikrni jamlamoq
+conclude - xulosa qilmoq
+confident - o'ziga ishongan
+considerable - sezilarli
+convey - yetkazmoq
+definite - aniq
+delight - zavq
+destination - manzil
+dictate - aytib turmoq
+edge - chet, qirra
+path - yo'l
+resort - suyanmoq
+shadow - soya
+succeed - muvaffaqiyatga erishmoq
+suspect - gumon qilmoq
+valley - vodiy
+Essential 2 · Unit 9
+admire - hurmat qilmoq
+aid - yordam
+attempt - urinish
+authority - hokimiyat
+capital - poytaxt
+cooperate - hamkorlik qilmoq
+defend - himoya qilmoq
+destruction - vayronagarchilik
+disorder - tartibsizlik
+division - bo'linish
+enable - imkon bermoq
+frustrate - ko'nglini qoldirmoq
+govern - boshqarmoq
+plenty - mo'l
+relieve - xalos qilmoq
+reputation - obro'
+royal - qirollik
+slave - qul
+struggle - kurash
+stupid - ahmoqona
+Essential 2 · Unit 10
+citizen - fuqaro
+council - kengash
+declare - e'lon qilmoq
+enormous - ulkan
+extraordinary - noodatiy
+fog - tuman
+funeral - dafn marosimi
+giant - ulkan
+impression - taassurot
+income - daromad
+mad - telba
+ought - kerak
+resist - qarshilik ko'rsatmoq
+reveal - oshkor qilmoq
+rid - qutilmoq
+sword - qilich
+tale - hikoya
+trap - tuzoq
+trial - sud
+violent - zo'ravon
+Essential 2 · Unit 11
+admission - ruxsat
+astronomy - astronomiya
+blame - ayblamoq
+chemistry - kimyo
+despite - qaramasdan
+dinosaur - dinozavr
+exhibit - ko'rgazma
+fame - shuhrat
+forecast - ob-havo ma'lumoti
+genius - daho
+gentle - muloyim
+geography - geografiya
+interfere - aralashmoq
+lightly - engil
+principal - asosiy, direktor
+row - qator
+shelf - tokcha
+spite - ataylab
+super - ajoyib
+wet - nam
+Essential 2 · Unit 12
+abuse - ozor yetkazmoq
+afford - qurbi yetmoq
+bake - pishirmoq
+bean - loviya
+candle - sham
+convert - o'zgartirmoq
+debt - qarz
+decrease - kamaymoq
+fault - xato
+fund - jamg'arma
+generous - saxiy
+ingredient - ingredient
+insist - turib olmoq
+mess - tartibsizlik
+metal - metall
+monitor - kuzatmoq
+oppose - qarshilik ko'rsatmoq
+passive - sust
+quantity - miqdor
+sue - sudga bermoq
+Essential 2 · Unit 13
+anxiety - tashvish
+army - armiya
+billion - milliard
+carve - o'ymoq
+consult - maslahatlashmoq
+emergency - favqulodda holat
+fortune - boylik, omad
+guarantee - kafolat bermoq
+hike - yurish
+initial - boshlang'ich
+intense - qizg'in, kuchli
+lend - qarz bermoq
+peak - cho'qqi
+potential - ehtimoliy
+pride - g'urur
+proof - dalil
+quit - chiqish
+spin - aylantirmoq
+tiny - kichik
+tutor - o'qituvchi
+Essential 2 · Unit 14
+apparent - aniq
+blind - ko'r
+calculate - hisoblamoq
+chat - suhbat
+commit - ahd qilmoq
+compose - tuzmoq
+dormitory - yotoqxona
+exhaust - holdan toydirmoq
+greenhouse - issiqxona
+ignore - e'tibor bermaslik
+obvious - aniq
+physics - fizika
+portion - qism
+remind - eslatmoq
+secretary - kotib
+severe - jiddiy
+talent - iste'dod
+thesis - maqola
+uniform - forma
+vision - ko'rish
+Essential 2 · Unit 15
+absorb - shimib olmoq
+boss - xo'jayin
+committee - qo'mita
+contract - shartnoma
+crew - jamoa
+devote - bag'ishlamoq
+dig - qazimoq
+dine - ovqatlanmoq
+donate - ehson qilmoq
+double - ikki karra
+elevate - ko'tarmoq
+flavor - lazzat
+foundation - asos
+generation - avlod
+handle - dastak
+layer - qatlam
+mud - loy
+smooth - silliq
+soil - tuproq
+unique - noyob, o'zgacha`,b2_16_30:`Essential 2 · Unit 16
+chamber - xujra
+deny - inkor qilmoq
+document - hujjat
+emphasize - urg'u bermoq
+fever - isitma
+flu - gripp
+freeze - muzlatmoq
+gesture - imo-ishora
+interrupt - gapni bo'lmoq
+last - oxirgi
+likeness - o'xshashlik
+moreover - bundan tashqari
+perspective - nazar
+rational - oqilona
+recover - tiklanmoq
+rely - tayanmoq
+shock - zarba
+shy - uyatchang
+stare - tikilmoq
+thus - shunday qilib
+Essential 2 · Unit 17
+aim - maqsad
+attach - ulamoq
+bet - garov bog'lamoq
+carriage - arava
+classic - mumtoz
+commute - borib kelmoq
+confirm - tasdiqlamoq
+criticize - tanqid qilmoq
+differ - farq qilmoq
+expense - xarajatlar
+formal - rasmiy
+height - balandlik
+invent - ixtiro qilmoq
+junior - kichik
+labor - mehnat
+mechanic - mexanik
+prime - asosiy
+shift - o'zgarish
+signal - belgi
+sincere - samimiy
+Essential 2 · Unit 18
+ability - qobiliyat
+agriculture - qishloq xo'jaligi
+cartoon - multfilm
+ceiling - shift
+convince - ishontirmoq
+curious - qiziquvchan
+delay - kechiktirmoq
+diary - kundalik
+element - element
+faith - e'tiqod
+grain - don
+greet - salomlashmoq
+investigate - tekshirmoq
+joy - quvonch
+label - yorliq
+monk - rohib
+odd - g'alati
+pause - to'xtatib turmoq
+priest - ruhoniy
+profession - kasb
+Essential 2 · Unit 19
+adopt - qabul qilmoq, boqib olmoq
+beg - yalinmoq
+beyond - ortida
+costume - kostyum
+exclaim - ta'kidlamoq
+extend - uzaytirmoq
+fool - ahmoq
+forbid - taqiqlamoq
+illustrate - tasvirlab bermoq
+indeed - haqiqatdan ham
+interpret - tushuntirmoq
+kindly - muloyimlik bilan
+motive - maqsad
+nest - uya
+origin - kelib chiqishi
+reception - qabulxona
+reject - rad etmoq
+silence - sukunat
+stream - soy
+tone - ovoz
+Essential 2 · Unit 20
+accomplish - bajarmoq
+approve - tasdiqlamoq
+approximate - taxminiy
+barrier - to'siq
+detect - aniqlamoq
+duty - vazifa
+elementary - boshlang'ich
+failure - muvaffaqiyatsizlik
+gradual - bosqichma-bosqich
+immigrant - ko'chib keluvchi
+insert - kiritmoq
+instant - tezda
+poverty - qashshoqlik
+pretend - o'zini qilib ko'rsatmoq
+rank - daraja
+recognition - tan olish
+refrigerate - muzlatmoq
+rent - ijaraga olmoq
+retire - nafaqaga chiqmoq
+statistic - statistika, raqamlar
+Essential 2 · Unit 21
+astronaut - astronavt
+awake - uyg'oq
+courage - jasorat
+float - suzmoq
+grant - taqdim etmoq
+gravity - tortish kuchi
+jewel - qimmatbaho tosh
+miner - konchi
+mineral - mineral
+participate - ishtirok etmoq
+permission - ruxsat
+pour - quymoq
+presence - mavjudlik
+raw - xom
+satellite - sun'iy yo'ldosh
+scale - ko'lam
+skip - o'tkazib yubormoq
+stretch - cho'zmoq
+telescope - teleskop
+underground - yer osti
+Essential 2 · Unit 22
+alarm - ogohlantiruvchi ovoz
+apart - alohida, ayro
+arrest - hibsga olmoq
+award - mukofot
+breed - zot
+bucket - paqir
+contest - tanlov
+convict - aybdor deb topmoq
+garage - garaj
+journalist - jurnalist
+pup - it bolasi
+qualify - mos kelmoq
+repair - ta'mirlamoq
+resume - davom ettirmoq
+rob - talon-taroj qilmoq
+slip - sirpanib ketmoq
+somewhat - ancha, birmuncha
+stable - barqaror
+tissue - to'qima, salfetka
+yard - hovli
+Essential 2 · Unit 23
+alike - o'xshash
+annoy - jig'iga tegmoq
+architecture - arxitektura
+artificial - sun'iy
+chain - zanjir
+distinct - farqli
+distinguish - ajratmoq
+dust - chang
+excitement - hayajon
+heal - tuzalmoq
+inherit - meros qilib olmoq
+manner - axloq, odob
+mount - kuchaymoq
+roof - tom
+shortage - kamchilik
+solid - qattiq
+stock - g'aram
+substance - modda
+tomb - maqbara
+wound - yara
+Essential 2 · Unit 24
+bath - vanna
+bend - bukmoq
+chew - chaynamoq
+disabled - nogiron
+fantastic - ajoyib
+fiction - to'qima
+flag - bayroq
+inspect - tekshirmoq
+journal - jurnal
+liquid - suyuqlik
+marvel - ajoyibot
+nutrient - ozuqa moddalari
+overcome - yengib o'tmoq
+recall - eslamoq
+regret - afsuslanmoq
+soul - ruh
+sufficient - yetarli
+surgery - jarrohlik
+tough - qiyin
+tube - quvur
+Essential 2 · Unit 25
+admit - tan olmoq
+bin - quti
+bowl - kosa
+cabin - hujra
+cash - naqd pul
+criminal - jinoyatchi
+dozen - o'nlab
+elder - kattaroq
+facial - yuzga oid
+fence - to'siq
+inspire - ilhomlantirmoq
+mere - biroz
+neat - pokiza
+occasion - vaziyat
+penalty - jazo
+rude - qo'pol
+settle - joylashmoq
+vehicle - transport vositasi
+wallet - hamyon
+yell - baqirmoq
+Essential 2 · Unit 26
+accuse - ayblamoq
+adjust - sozlamoq
+amuse - qiziqtirmoq
+coral - marjon
+cotton - paxta
+crash - to'qnashmoq
+deck - paluba
+engage - jalb qilmoq
+firm - qattiq, firma
+fuel - yoqilg'i
+grand - katta
+hurricane - bo'ron
+loss - yo'qotish
+plain - tekis
+reef - qoya
+shut - yopmoq
+strict - qat'iy
+surf - to'lqinda uchmoq
+task - vazifa
+zone - zona, hudud
+Essential 2 · Unit 27
+apology - kechirim so'rash
+bold - botir
+capture - tutmoq
+cardinal - asosiy
+duke - gersog
+expose - ta'sir ostida qoldirmoq
+guilty - aybdor
+hire - ijaraga olmoq
+innocent - begunoh
+jail - qamoqxona
+minister - vazir
+ordinary - oddiy
+permanent - doimiy
+preserve - himoya qilmoq
+pronounce - talaffuz qilmoq
+resemble - o'xshamoq
+symptom - belgi
+tobacco - tamaki
+twin - egizak
+witch - jodugar
+Essential 2 · Unit 28
+accompany - hamroh bo'lmoq
+bare - yalang'och
+branch - shox
+breath - nafas
+bridge - ko'prik
+cast - uloqtirmoq
+dare - jazm qilmoq
+electronic - elektron
+inn - kichik mehmonxona
+net - to'r
+philosophy - falsafa
+pot - qozon
+seed - urug'
+sharp - o'tkir
+sort - tur
+subtract - ayirmoq
+tight - qattiq
+virtual - virtual
+weigh - o'lchamoq
+whisper - pichirlamoq
+Essential 2 · Unit 29
+abstract - mavhum
+annual - yillik
+clay - sopol
+cloth - mato
+curtain - parda
+deserve - loyiq bo'lmoq
+feather - pat
+fertile - unumdor
+flood - suv toshqini
+furniture - mebel
+grave - qabr
+ideal - ideal
+intelligence - idrok
+nowadays - shu kunlarda
+obtain - olmoq
+religious - diniy
+romantic - ishqiy
+shell - qobiq
+shore - qirg'oq
+wheel - g'ildirak
+Essential 2 · Unit 30
+appeal - o'ziga tortmoq
+assume - faraz qilmoq
+borrow - qarz olmoq
+client - mijoz
+downtown - shahar markazi
+dull - zerikarli
+embarrass - uyatga qo'ymoq
+fare - haq, to'lov
+former - sobiq
+formula - formula
+found - tashkil qilmoq
+invest - sarmoya tikmoq
+loan - qarz
+practical - amaliy
+quarter - chorak
+salary - ish haqi
+scholarship - stipendiya
+temporary - vaqtinchalik
+treasure - xazina
+urge - da'vat qilmoq`,b3_1_15:`Essential 3 · Unit 1
+arise - yuzaga kelmoq
+benefactor - ko'mak beruvchi
+blacksmith - temirchi
+charitable - ochiqqo'l
+chimney - mo'ri
+compensate - qoplamoq
+encounter - duch kelmoq
+exceed - oshib ketmoq
+forge - shakllantirmoq
+humble - kamtarin
+iron - temir
+ladder - narvon
+modest - kamtarin
+occupy - ishg'ol qilmoq
+penny - chaqa
+preach - voizlik qilmoq
+prosper - yashnamoq
+province - viloyat
+satisfaction - mamnuniyat
+sustain - davom ettirmoq
+Essential 3 · Unit 2
+acquire - ega bo'lmoq
+awkward - noqulay
+caretaker - enaga
+deceive - aldamoq
+discourage - tushkunlikka solmoq
+fake - soxta
+hatred - nafrat
+hut - kulba
+inferior - past
+lodge - kulba
+neglect - beparvolik qilmoq
+newcomer - yangi kelgan
+offense - jinoyat
+overlook - e'tiborsiz qoldirmoq
+repay - qaytarmoq
+ridiculous - kulgili
+satisfactory - qoniqarli
+shepherd - cho'pon
+venture - tavakkal qilmoq
+wheat - bug'doy
+Essential 3 · Unit 3
+alley - tor ko'cha
+ax - bolta
+bunch - dasta, shingil
+chore - majburiyat, uy ishi
+decent - yaxshi
+disgrace - sharmandalik
+elbow - tirsak
+grateful - minnatdor
+irritate - jahlini chiqarmoq
+kid - bola
+loose - bo'sh, mustahkam emas
+offend - xafa qilmoq
+overnight - bir kechada
+persist - davom etmoq
+pine - qarag'ay
+scar - chandiq
+sensation - hissiyot
+sled - chana
+tease - masxara qilmoq
+valentine - sevgilar kuni tabrigi
+Essential 3 · Unit 4
+bloom - gullamoq
+compact - ixcham
+curl - jingalak
+decay - parchalanish
+dessert - shirinlik
+dip - botirmoq
+distant - uzoq
+eclipse - tutilish
+fairy - pari
+grace - viqor
+leisure - dam olish
+mankind - insoniyat
+passion - ehtiros
+pillow - yostiq
+pulse - tomir urishi
+refresh - yangilamoq
+sneeze - aksirmoq
+spice - ziravorlar
+whistle - hushtak
+wool - jun
+Essential 3 · Unit 5
+acquaint - tanishtirmoq
+cemetery - qabriston
+curse - la'natlamoq
+disguise - niqob
+fancy - noodatiy
+flashlight - chiroq
+hood - qalpoq
+inhabitant - yashovchi
+nourish - oziqlantirmoq
+pirate - qaroqchi
+publication - nashr
+riddle - topishmoq
+rot - chirimoq
+scare - qo'rqitmoq
+shortly - qisqa vaqt ichida
+skeleton - skelet
+spoil - buzilmoq
+starve - och qolmoq
+thrill - qiziqish
+wicked - yomon
+Essential 3 · Unit 6
+alert - ogohlantirmoq
+broadcast - eshittirish
+bulletin - xabarnoma
+bump - do'ng, bo'rtgan joy
+chop - bo'laklamoq
+closet - shkaf
+console - yupatmoq
+district - tuman
+drawer - tortma
+endure - chidamoq
+execute - qatl qilmoq
+grasp - mahkam tutmoq
+rear - orqa
+senator - senator
+skull - bosh suyagi
+stir - aralashtirmoq
+tap - bosmoq
+tremendous - ulkan
+underneath - ostida
+worm - qurt
+Essential 3 · Unit 7
+abandon - tark etmoq
+ambitious - shijoatli
+bark - vovullamoq
+bay - ko'rfaz
+brilliant - aqlli
+chin - jag'
+complaint - shikoyat
+deaf - kar
+enthusiastic - g'ayratli
+expedition - ekspeditsiya
+horizon - ufq
+loyal - sodiq
+mayor - shahar hokimi
+mutual - o'zaro
+overweight - semiz
+refuge - boshpana
+restore - tiklash
+rub - ishqalamoq
+senses - hislar
+veterinarian - veterinar
+Essential 3 · Unit 8
+anniversary - yilligi
+arithmetic - arifmetika
+ashamed - uyalgan
+burst - portlamoq
+carpenter - duradgor
+coal - ko'mir
+couch - divan
+drip - tomchilamoq
+elegant - bashang
+fabric - mato
+highlands - tog'li hududlar
+ivory - fil suyagi
+mill - tegirmon
+needle - igna
+polish - jilo bermoq
+sew - tikmoq
+shed - omborxona
+thread - ip
+trim - tartibga solmoq
+upwards - yuqoriga
+Essential 3 · Unit 9
+ail - ozor bermoq
+ally - ittifoqchi
+boast - maqtanmoq
+bounce - sakramoq
+bully - bezori
+carbohydrate - uglevod
+crawl - emaklamoq
+defeat - mag'lubiyat
+dial - terish
+dominant - dominant
+mercy - rahmdillik
+nod - bosh qimirlatmoq
+opponent - raqib
+quarrel - janjallashmoq
+rival - raqib
+sore - og'riq
+sting - nish, chaqmoq
+strain - tirishmoq
+torture - qiynoq
+wrestle - kurashmoq
+Essential 3 · Unit 10
+absence - yo'qlik
+aloud - ovoz chiqarib
+bald - kal
+blanket - ko'rpa
+creep - o'rmalamoq
+divorce - ajrashmoq
+imitate - taqlid qilmoq
+infant - chaqaloq
+kidnap - o'g'irlash
+nap - mizg'ish
+nowhere - hech qayerda
+pat - ohista urmoq
+relief - yengillik
+reproduce - nusxa yasamoq
+rhyme - qofiya
+suck - so'rmoq
+urgent - shoshilinch
+vanish - yo'qolmoq
+wagon - aravacha
+wrinkle - ajin
+Essential 3 · Unit 11
+abnormal - noodatiy
+bamboo - bambuk
+blossom - gullamoq
+compass - kompas
+dialect - lahja
+dishonest - yolg'onchi
+dwarf - mitti
+ecosystem - ekosistema
+fatal - o'limga olib keluvchi
+impatient - sabrsiz
+leaf - yaproq
+manuscript - qo'lyozma
+marsh - botqoq
+patience - sabr-toqat
+perfume - atir
+pond - hovuz
+proverb - maqol
+pursuit - ta'qib qilish
+recite - yoddan aytmoq
+wilderness - biyobon
+Essential 3 · Unit 12
+anticipate - oldindan bilmoq
+barrel - bochka
+beam - nur
+casual - oddiy
+caution - ehtiyotkorlik
+contrary - teskari
+deliberate - qasddan, atay
+dissolve - suyuqlikda erimoq
+explode - portlamoq
+fasten - bog'lamoq
+germ - mikrob
+kit - to'plam
+puff - tutun
+rag - latta
+scatter - sochmoq
+scent - hid
+steel - po'lat
+swift - tezkor
+toss - otmoq, tashlamoq
+triumph - g'alaba
+Essential 3 · Unit 13
+aboard - bortda
+bitter - achchiq
+bullet - o'q
+devil - shayton
+drift - siljimoq
+enforce - majburlamoq
+fountain - fontan
+harbor - bandargoh
+inhabit - yashamoq
+march - qadam tashlamoq
+millionaire - millioner
+port - port
+sheriff - sherif
+startle - cho'chitmoq
+sweat - terlamoq
+trigger - tepki
+unify - birlashtirmoq
+vessel - kema
+voyage - sayohat
+worship - ibodat qilmoq
+Essential 3 · Unit 14
+apprentice - shogird
+assure - ishontirmoq
+bandage - bint
+bleed - qonamoq
+bond - bog'lanmoq
+chef - oshpaz
+crown - toj
+departure - ketish
+diligent - mehnatsevar
+emperor - imperator
+fiber - tola
+horrible - dahshatli
+impolite - qo'pol
+kneel - tiz cho'kmoq
+luxury - hashamat
+massive - katta
+panic - vahima
+priority - ustuvorlik
+robe - xalat
+scold - tanbeh bermoq
+Essential 3 · Unit 15
+affair - munosabat
+assembly - yig'ilish
+bless - duo qilmoq
+cereal - don
+cheerful - quvnoq
+diameter - diametr
+exploit - ekspluatatsiya qilmoq
+famine - ochlik
+harvest - hosil
+merry - xushchaqchaq
+nut - yong'oq
+pardon - afv etish
+pharaoh - fir'avn
+ripe - pishgan
+roast - qovurilgan
+routine - muntazam
+scheme - sxema
+slim - nozik
+stove - pechka
+theft - o'g'irlik`,b3_16_30:`Essential 3 · Unit 16
+adolescent - o'smir
+aptitude - qobiliyat
+compliment - iltifot
+hinder - to'sqinlik qilmoq
+journalism - jurnalistika
+jury - hakamlar hay'ati
+justice - adolat
+liberty - ozodlik
+literary - adabiy
+pharmacy - dorixona
+pill - dori hapi
+presume - taxmin qilmoq
+privacy - maxfiylik
+punishment - jazo
+sensible - aqlli
+slice - tilim
+sorrow - qayg'u
+straw - somon
+swell - shishmoq
+tidy - toza
+Essential 3 · Unit 17
+affection - muhabbat
+agency - agentlik
+ash - kul
+confine - cheklamoq
+dismiss - ishdan bo'shatmoq, chiqarib yubormoq
+erupt - otilmoq
+fate - taqdir
+lava - lava
+miserable - bechora
+navigate - boshqarmoq
+originate - kelib chiqmoq
+remainder - qoldiq
+retrieve - topib kelmoq
+shallow - sayoz
+slope - qiyalik
+span - kenglik
+superstition - xurofot
+sympathy - hamdardlik
+vibrate - tebranmoq
+wander - sang'imoq
+Essential 3 · Unit 18
+armor - zirh
+blare - baland shovqin qilmoq
+boom - gumburlamoq
+cliff - qoya
+flame - alanga
+independence - mustaqillik
+invasion - bosqin
+knight - ritsar
+lightning - chaqmoq
+rebel - isyonchi
+retreat - chekinmoq
+revolution - inqilob
+spear - nayza
+steep - tik
+summit - cho'qqi
+thunder - momaqaldiroq
+troops - askarlar
+warrior - jangchi
+withdraw - olib qo'ymoq, chiqib ketmoq
+yield - yo'l bermoq
+Essential 3 · Unit 19
+bench - o'rindiq
+confront - qarshi turmoq
+daisy - moychechak
+dispute - kelishmovchilik
+horror - dahshat
+incident - hodisa
+mist - tuman
+object - ob'ekt
+orphan - yetim
+plot - reja
+pregnant - homilador
+rage - g'azab
+revenge - intiqom
+shame - sharmandalik
+sigh - xo'rsinmoq
+sneak - sezdirmasdan yurmoq
+spare - ortiqcha
+stem - poya, tana
+supper - kechki ovqat
+tender - yumshoq
+Essential 3 · Unit 20
+beneath - ostida
+cub - ayiq bolasi
+dawn - tong
+dissatisfied - qoniqmagan
+ease - yengillik
+evident - aniq
+hail - do'l
+howl - uvullamoq
+leap - sakramoq
+magnificent - ajoyib
+necessity - zaruriyat
+outcome - natija
+pile - uyum
+profound - chuqur
+seize - changallamoq
+squeeze - siqmoq
+supreme - oliy
+terrific - ajoyib
+trait - fazilat
+vital - hayotiy
+Essential 3 · Unit 21
+accustomed - odat tusiga kirgan
+affirm - tasdiqlamoq
+astonished - hayratda qolgan
+bang - gumburlatmoq
+clan - qabila
+dim - xira, kuchsiz yorug'lik
+emphasis - urg'u
+fable - masal
+feast - bayram ziyofati
+glow - yorug'lik
+hollow - ichi bo'sh
+instinct - instinkt
+joint - qo'shma
+leak - oqish
+physician - shifokor
+sacrifice - qurbon qilmoq
+stiff - qattiq
+stroke - paypaslamoq
+tragic - fojiali
+tune - sozlamoq
+Essential 3 · Unit 22
+accommodate - joylashtirmoq
+circus - sirk
+coincide - bir vaqtga to'g'ri kelmoq
+commission - komissiya
+dose - doza
+dye - bo'yoq
+extent - ko'lam
+gender - jins
+headline - sarlavha
+informal - norasmiy
+inquire - so'ramoq
+messenger - xabarchi
+peer - tengdosh
+portrait - portret
+pose - pozitsiya
+ranch - rancho
+steer - boshqarmoq
+stripe - yo'l-yo'l chiziq
+tame - qo'lga o'rgatilgan
+tempt - vasvasaga solmoq
+Essential 3 · Unit 23
+Aborigine - aborigen
+ban - taqiqlamoq
+cautious - ehtiyotkor
+confess - tan olmoq
+cottage - yozgi uy
+daytime - kunduzi
+desperate - umidsiz
+fade - rangi o'chmoq
+fierce - shafqatsiz
+gamble - qimor o'ynamoq
+lawn - maysazor
+mow - o'rmoq
+outlaw - qonundan tashqari
+prospect - istiqbol
+purse - sumka
+rod - tayoq
+seldom - kamdan-kam hollarda
+shave - soqol olmoq
+terrified - qo'rqib ketgan
+wizard - sehrgar
+Essential 3 · Unit 24
+bulb - lampochka
+bundle - to'plam
+cattle - qoramol
+flee - qochmoq
+graze - o'tlamoq
+greed - ochko'zlik
+herd - poda
+initiate - boshlamoq
+lane - yo'l
+luggage - yuk
+nerve - asab
+optimist - optimist
+parade - parad
+pave - tosh yotqizmoq
+phantom - arvoh
+portable - ko'chma
+poster - afisha
+scratch - tirnamoq
+symphony - simfoniya
+widow - beva ayol
+Essential 3 · Unit 25
+circulate - aylanmoq, tarqatmoq
+consequent - natijada
+derive - kelib chiqmoq
+drown - cho'kib ketmoq
+dynasty - sulola
+fraction - qism
+frost - qirov
+illusion - illuziya
+invade - bostirib kirmoq
+lieutenant - leytenant
+marine - dengizdagi
+merit - qadr-qimmat
+navy - harbiy dengiz floti
+polar - qutbli
+ray - nur
+resign - iste'foga chiqmoq
+suicide - o'z joniga qasd qilish
+tremble - titramoq
+underlying - asosiy
+via - orqali
+Essential 3 · Unit 26
+alter - o'zgartirmoq
+aside - chetda
+autumn - kuz
+blend - aralashtirmoq
+collapse - qulamoq
+crush - ezmoq
+curve - egri chiziq
+disgusting - jirkanch
+drain - oqova
+embrace - quchoqlamoq
+envy - hasad qilmoq
+fireworks - otashbozlik
+flour - un
+fuse - o't oldirish arqoni, sug'urta
+ginger - zanjabil
+jealous - rashkchi, hasadgo'y
+paste - pasta, surtmoq
+receipt - chek
+wipe - artmoq
+wire - sim
+Essential 3 · Unit 27
+acknowledge - e'tirof etmoq
+ambassador - elchi
+blonde - malla sochli
+conquer - zabt etmoq
+drag - sudramoq
+exaggerate - bo'rttirib ko'rsatmoq
+heritage - meros
+insult - haqorat qilmoq
+meanwhile - shu orada
+necklace - marjon
+noble - olijanob
+precious - qimmatbaho
+prejudice - noto'g'ri tushuncha
+rumor - mish-mish
+sin - gunoh
+spectacle - manzara
+stack - g'aram
+suspicious - shubhali
+tin - qalay
+vase - vaza, guldon
+Essential 3 · Unit 28
+ache - og'riq
+arctic - arktik
+canal - kanal
+chemist - kimyogar
+chill - salqinlamoq
+congress - kongress
+dairy - sut mahsulotlari
+descend - tushmoq
+grocer - baqqol
+hesitate - ikkilanmoq
+institution - muassasa
+jog - yengil yugurmoq
+merchant - savdogar
+poke - turtmoq
+postpone - kechiktirmoq
+splash - sepmoq
+stubborn - o'jar
+suburb - shahar cheti
+tide - suv ko'tarilishi va qaytishi
+tragedy - fojia
+Essential 3 · Unit 29
+bomb - bomba
+certificate - sertifikat
+circumstance - vaziyat
+coffin - tobut
+cope - uddalamoq
+criticism - tanqid
+devastate - vayron qilmoq
+frown - qovoq solmoq
+gaze - tikilib qaramoq
+glance - bir qarab olmoq
+grief - qayg'u
+groom - kuyov
+license - litsenziya
+microscope - mikroskop
+nuclear - yadroviy
+portray - tasvirlamoq
+rotate - aylantirmoq
+souvenir - esdalik
+submarine - suvosti kemasi
+trace - iz
+Essential 3 · Unit 30
+appliance - maishiy texnika
+basin - havza
+broom - supurgi
+caterpillar - kapalak qurti
+cupboard - javon
+delicate - nozik
+emerge - paydo bo'lmoq
+handicap - nogironlik
+hook - ilmoq
+hop - sakramoq
+laundry - kir kiyim
+pursue - ta'qib qilmoq
+reluctant - istamay
+sleeve - yeng
+spine - umurtqa
+stain - dog'
+strip - yupqa tasma
+swear - qasam ichmoq
+swing - belanchak
+utilize - foydalanmoq`,b4_1_15:`Essential 4 · Unit 1
+aroma - xushbo'y hid
+beverage - ichimliklar
+cluster - to'plam
+combine - qo'shmoq
+condensed - zichlangan
+contemporary - zamonaviy
+cultivate - yetishtirmoq
+divine - ilohiy
+humid - nam
+odor - hid
+palate - tanglay
+paradise - jannat
+plantation - plantatsiya, dala maydoni
+rapid - tez
+rate - tezlik
+soothing - tinchlantiruvchi
+subtle - sezilmas
+texture - yuza tuzilishi
+toxic - zaharli
+vary - farq qilmoq
+Essential 4 · Unit 2
+accident - baxtsiz hodisa
+admiral - admiral
+arc - yoy
+character - fe'l, xarakter
+conscience - vijdon
+fiery - olovli
+flesh - go'sht
+grapefruit - greypfrut
+hay - pichan
+horrified - dahshatga tushgan
+kerosene - kerosin
+loop - halqa
+paddle - eshkak
+raft - sol
+sour - nordon
+stake - qoziq
+steward - xizmatchi
+string - ip
+thorn - tikan
+wreck - vayron qilmoq
+Essential 4 · Unit 3
+admonish - tanbeh bermoq
+audible - eshitiladigan
+awesome - ajoyib
+beware - ehtiyot bo'lmoq
+brag - maqtanmoq
+conscious - xushi joyida
+disagree - qarshi bo'lmoq
+echo - aks-sado
+eventual - oxirgi, yakuniy
+hint - ishora
+idiot - ahmoq
+immense - ulkan
+indirect - bilvosita
+option - tanlov
+pastime - ko'ngilochar mashg'ulot
+perfect - mukammal
+pinpoint - aniqlamoq
+switch - o'zgartirmoq
+thorough - batafsil, to'liq
+torment - azob bermoq
+Essential 4 · Unit 4
+beak - tumshuq
+damp - nam
+disapprove - ma'qullamaslik
+except - dan tashqari
+flight - parvoz
+fond - xush ko'rmoq
+immoral - axloqsiz
+ivy - pechak
+moan - oh tortmoq
+oblivious - bexabar
+perish - halok bo'lmoq
+pit - chuqur
+rim - chet, gardish
+roost - in
+slippery - sirpanchiq
+soar - baland ko'tarilmoq
+trivial - ahamiyatsiz
+typical - odatiy
+utterly - o'ta darajada
+weep - yig'lamoq
+Essential 4 · Unit 5
+awhile - bir muddat
+cyberspace - kiber-maydon
+edit - tahrir qilmoq
+essay - insho
+evaluate - baholamoq
+faint - xushdan ketmoq
+global - global
+gymnasium - sport zali
+highlight - belgilab qo'ymoq
+ignorant - nodon
+index - indeks, ko'rsatkich
+lecture - ma'ruza
+moral - axloqiy
+operate - ishlamoq
+private - xususiy
+recent - yaqinda
+resolution - qaror
+semester - semestr
+typewritten - mashinkada yozilgan
+weird - g'alati
+Essential 4 · Unit 6
+absolute - mutlaq
+alas - afsuski
+attentive - diqqatli
+cape - yopinchiq
+envision - tasavvur qilmoq
+evenly - teng ravishda
+folk - xalq
+melt - erimoq
+patch - parcha yer
+pleasure - zavq
+pop - paq etmoq
+pudding - puding
+rail - panjara
+recipe - retsept
+role - rol
+shrink - kichraymoq
+soak - ivitmoq
+spark - uchqun
+spirit - ruh
+suit - kostyum
+Essential 4 · Unit 7
+account - hisob raqami
+architect - me'mor
+conceal - yashirmoq
+crime - jinoyat
+deed - ish, hujjat
+gratitude - minnatdorchilik
+habitat - yashash joyi
+intervene - aralashmoq
+landmark - belgi, diqqatga sazovor joy
+legal - qonuniy
+memorable - unutilmas
+oblige - majbur qilmoq
+offence - jinoyat
+proclaim - e'lon qilmoq
+rally - namoyish, miting
+resolve - hal qilmoq
+resource - manba
+sentence - hukm
+volunteer - ko'ngilli
+witness - guvoh
+Essential 4 · Unit 8
+access - kirish imkoniyati
+conduct - fe'l-atvor
+constant - doimiy
+crack - yoriq
+device - qurilma
+enclose - o'rab olmoq
+grip - mahkam tutmoq
+halt - to'xtamoq
+impending - yaqinlashib kelayotgan
+influence - ta'sir o'tkazmoq
+law - qonun
+mode - holat, usul
+perspire - terlamoq
+replace - almashtirmoq
+snap - sindirmoq
+sly - ayyor
+tend - moyil bo'lmoq
+valid - haqiqiy, yaroqli
+version - versiya
+whatsoever - umuman
+Essential 4 · Unit 9
+alongside - yonida
+appetite - ishtaha
+assist - yordam bermoq
+breeze - yengil shamol
+defy - qarshilik qilmoq
+display - ko'rsatmoq
+efficient - samarali
+feeble - zaif
+forgive - kechirmoq
+lively - jo'shqin
+majestic - ulug'vor
+nor - ham emas
+outraged - g'azablangan
+pessimistic - noumid
+rumor - mish-mish
+slap - shapaloq urmoq
+smash - sindirmoq
+subject - mavzu
+wage - ish haqi
+whereas - holbuki
+Essential 4 · Unit 10
+animate - jonli
+classify - tasniflamoq
+concede - tan olmoq
+concept - tushuncha
+construct - qurmoq
+decade - o'n yillik
+diagram - diagramma
+ferry - parom
+handy - qulay, foydali
+isolate - ajratib qo'ymoq
+longing - intizorlik
+numerous - ko'p
+particle - zarracha
+plea - o'tinch iltimos
+refrain - o'zini tiymoq
+review - ko'rib chiqmoq
+sophisticated - murakkab
+surrender - taslim bo'lmoq
+upright - tik
+worthwhile - arziydigan
+Essential 4 · Unit 11
+alliance - ittifoq
+applause - olqish
+armed - qurollangan
+authoritative - nufuzli
+ceremony - marosim
+culture - madaniyat
+defense - mudofaa
+detail - tafsilot
+diverse - turli xil
+enchant - sehrlamoq
+equip - jihozlamoq
+exception - istisno
+genre - janr
+impact - ta'sir
+lure - o'ziga jalb qilmoq
+obstacle - to'siq
+shelter - boshpana
+sort - tartibga solmoq
+supply - ta'minlamoq
+vain - o'ziga bino qo'ygan
+Essential 4 · Unit 12
+alternative - muqobil
+avenue - xiyobon
+belly - qorin
+bid - taklif, urinish
+blow - puflamoq
+conflict - nizo
+continent - qit'a
+current - oqim, hozirgi
+disrespect - hurmatsizlik
+enthusiasm - g'ayrat
+harsh - qattiqqo'l
+lean - suyanmoq
+meantime - shu orada
+mischief - nayrang
+muscle - mushak
+rescue - qutqarmoq
+succession - ketma-ketlik
+terrain - joy relyefi
+timid - qo'rqoq
+violence - zo'ravonlik
+Essential 4 · Unit 13
+affect - ta'sir qilmoq
+autograph - avtograf
+bead - munchoq, tomchi
+brew - damlamoq
+charm - e'tiborni tortmoq
+destiny - taqdir
+horn - signal, shox
+irritable - tez asabiylashadigan
+lag - ortda qolmoq
+maximize - kuchaytirmoq
+nightmare - yomon tush
+nutritious - ozuqaga boy
+protein - oqsil
+signature - imzo
+stuff - narsa
+subconscious - ong osti
+van - furgon
+warn - ogohlantirmoq
+workout - mashq
+zoom - tez yurmoq
+Essential 4 · Unit 14
+brick - g'isht
+crumble - maydalanmoq
+dough - xamir
+express - ifodalamoq
+fist - musht
+flexible - moslashuvchan
+flush - qizarmoq
+injure - shikastlamoq
+lump - bo'lak
+mixture - aralashma
+reconcile - yarashmoq
+ruin - vayron qilmoq
+shatter - sindirmoq
+shutter - tashqi deraza qopqog'i
+sift - elamoq
+slight - biroz
+sparkle - chaqnamoq
+sprinkle - sepmoq
+stale - qotgan
+utter - gapirmoq
+Essential 4 · Unit 15
+although - bo'lsa-da
+apply - qo'ymoq, murojaat qilmoq
+await - kutmoq
+beloved - sevimli
+bury - dafn qilmoq
+climate - iqlim
+complain - shikoyat qilmoq
+confuse - adashtirmoq
+due - kutilayotgan
+entire - butun
+establish - tashkil etmoq
+furnace - pech
+leash - arqon, qayish
+mature - ulg'aymoq
+measure - o'lchamoq
+midst - o'rtada
+misery - baxtsizlik
+prior - oldingi
+research - tadqiqot
+variety - turli xillik`,b4_16_30:`Essential 4 · Unit 16
+altogether - batamom
+bind - bog'lamoq
+bruise - ko'karish, lat
+custom - odat
+disobedient - itoatsiz
+foresee - oldindan ko'rmoq
+glimpse - bir ko'z tashlash
+hoop - halqa
+misfortune - baxtsizlik
+negative - salbiy
+per - har bir
+plead - yalinib so'ramoq
+rip - yirtmoq
+sake - uchun
+scrape - qirmoq
+source - manba
+stern - juda jiddiy
+stitch - tikmoq
+thump - dumbul tovush
+vehement - qizg'in
+Essential 4 · Unit 17
+civilization - sivilizatsiya
+convenient - qulay
+den - in, o'ra
+dew - shudring
+drastic - keskin
+exit - chiqmoq
+flock - suruv
+fold - qatlamoq
+lid - qopqoq
+loom - xira ko'rinmoq
+mighty - qudratli
+mushroom - qo'ziqorin
+native - mahalliy
+poison - zahar
+reed - qamish
+shield - himoya qilmoq
+stormy - bo'ronli
+sway - tebranmoq
+urban - shahar
+wade - suvda yurmoq
+Essential 4 · Unit 18
+accent - talaffuz, aksent
+barber - sartarosh
+basement - yerto'la
+blank - bo'sh
+blink - ko'z qisib ochmoq
+choir - xor
+comic - kulgili
+complicate - murakkablashtirmoq
+decline - rad etmoq
+errand - topshiriq
+glove - qo'lqop
+hermit - odamovi
+justly - adolatli
+leather - charm
+ponder - o'ylab ko'rmoq
+reserve - olib qo'ymoq
+script - ssenariy
+search - qidirmoq
+slam - qattiq yopmoq
+staircase - zina
+Essential 4 · Unit 19
+afflicted - azoblangan
+aisle - yo'lak
+atmosphere - atmosfera
+author - muallif
+breakdown - buzilish
+cargo - yuk
+chapter - bo'lim
+connect - ulanmoq
+etc - va boshqalar
+flip - ag'darmoq
+idle - bekor, bo'sh
+notify - xabar bermoq
+pea - no'xat
+raisin - mayiz
+retain - saqlamoq
+state - bayon qilmoq
+tray - patnis
+unfortunate - baxtsiz
+vivid - yorqin
+vomit - qusmoq
+Essential 4 · Unit 20
+betray - xiyonat qilmoq
+blast - portlash
+bracelet - bilaguzuk
+cease - to'xtamoq
+choke - bo'g'ilmoq
+civil - fuqarolik
+comment - sharhlamoq
+cross - kesib o'tmoq
+dent - botiq, pachoq
+distrust - ishonchsizlik
+fort - qal'a
+found - tashkil qilmoq
+lining - astar
+mass - uyum
+pray - ibodat qilmoq
+rife - keng tarqalgan
+sole - yagona
+sweep - supurmoq
+treachery - xiyonat
+tuck - joylamoq
+Essential 4 · Unit 21
+background - tarbiya, kelib chiqish
+bait - xo'rak
+chronicle - yilnoma
+copper - mis
+disease - kasallik
+folklore - xalq og'zaki ijodi
+infect - yuqtirmoq
+itch - qichimoq
+literature - adabiyot
+millennium - ming yillik
+myth - afsona
+promote - mansabini oshirmoq
+relate - bog'lamoq
+religion - din
+sum - miqdor
+teller - bank kassiri
+trustworthy - ishonchli
+update - yangilamoq
+vein - tomir
+venom - zahar
+Essential 4 · Unit 22
+charity - xayriya
+commerce - tijorat
+condemn - hukm qilmoq, qoralamoq
+cozy - shinam
+deplete - tugatmoq
+economy - iqtisodiyot
+empire - imperiya
+goods - mahsulot
+heed - diqqat qilmoq
+hitchhike - yo'lda mashinaga tekinga o'tirib yurmoq
+mock - masxara qilmoq
+neutral - betaraf
+persecute - quvg'in qilmoq
+pity - achinish
+reduce - kamaytirmoq
+scribe - xattot
+temper - jahl, fe'l
+throne - taxt
+unity - birlik
+victor - g'olib
+Essential 4 · Unit 23
+accurate - aniq
+analyze - tahlil qilmoq
+asteroid - asteroid
+controversy - tortishuv
+evolve - rivojlanmoq
+factor - omil
+genetic - genetik
+genome - genom
+identical - bir xil
+intellectual - aqliy, ziyoli
+majority - ko'pchilik
+mammal - sutemizuvchi
+multiply - ko'paytirmoq, ko'paymoq
+offspring - zurriyod
+pesticide - pestitsid
+regulate - tartibga solmoq
+reinforce - kuchaytirmoq
+stricken - aziyat chekkan
+vast - ulkan
+vegetarian - vegetarian
+Essential 4 · Unit 24
+cherish - qadrlamoq
+compassion - rahm-shafqat
+consent - rozilik
+core - o'zak
+cunning - ayyor
+dizzy - boshi aylanayotgan
+equilibrium - muvozanat
+foster - rivojlantirmoq, tarbiyalamoq
+grind - ezmoq
+growl - irillamoq
+moderation - me'yor
+predator - yirtqich
+sane - aqli raso
+saucer - likopcha
+snatch - yulib olmoq
+stagger - garang yurmoq
+stumble - qoqilmoq
+tense - tarang, tashvishli
+tumble - dumalab ketmoq
+withhold - tutib turmoq
+Essential 4 · Unit 25
+aircraft - samolyot
+celebrity - mashhur kishi
+concrete - beton
+decisive - hal qiluvchi
+esteemed - hurmatli
+ethical - axloqiy
+extinct - yo'q bo'lib ketgan
+hardy - bardoshli
+institute - institut
+jealousy - rashk
+migrate - ko'chib yurmoq
+nurture - tarbiyalamoq
+overhead - tepada
+principle - tamoyil
+rural - qishloq
+secluded - xilvat
+species - tur
+swamp - botqoqlik
+traverse - kesib o'tmoq
+zoology - zoologiya
+Essential 4 · Unit 26
+assumption - taxmin
+barley - arpa
+beast - hayvon, maxluq
+colonel - polkovnik
+contagious - yuqumli
+corpse - murda
+crisis - inqiroz
+cure - davolamoq
+deformed - shakli buzilgan
+discriminate - kamsitmoq
+embassy - elchixona
+extinguish - o'chirmoq
+flint - chaqmoqtosh
+harass - bezovta qilmoq
+integrate - qo'shilmoq
+miniature - kichraytirilgan, mitti
+nutrition - ozuqa
+promptly - darhol
+technician - texnik usta
+tropics - tropik mintaqa
+Essential 4 · Unit 27
+beneficial - foydali
+birthplace - tug'ilgan joy
+capacity - sig'im
+comparative - qiyosiy
+comprehensive - keng qamrovli
+conserve - saqlab qolmoq
+crucial - juda muhim
+cumulative - yig'iladigan
+deposit - qo'ymoq
+distribute - tarqatmoq
+equator - ekvator
+exotic - ekzotik
+federal - federal
+formation - shakllanish
+frequency - chastota
+objective - maqsad
+oxygen - kislorod
+rainforest - tropik o'rmon
+strategy - strategiya
+wooded - o'rmonli
+Essential 4 · Unit 28
+avail - foyda, yordam
+expand - kengaymoq
+define - ta'riflamoq
+dread - qo'rqmoq
+fundamental - asosiy
+horrifying - dahshatli
+incredulous - ishonmaydigan
+linger - uzoq turib qolmoq
+organism - organizm
+paraphrase - boshqacha ifodalamoq
+plague - vabo
+presently - hozir
+random - tasodifiy
+riot - tartibsizlik, isyon
+scribble - chizg'ilamoq
+shrine - ziyoratgoh
+solitude - yolg'izlik
+stark - qo'pol, yalang'och
+summon - chaqirmoq
+worsen - yomonlashmoq
+Essential 4 · Unit 29
+automobile - avtomobil
+candidate - nomzod
+confidential - maxfiy
+corporate - korporativ
+enhance - yaxshilamoq
+era - davr
+guideline - ko'rsatma
+incorporate - o'z ichiga olmoq
+interact - o'zaro aloqa qilmoq
+interval - tanaffus, oraliq
+mobile - mobil
+modify - o'zgartirmoq
+parallel - parallel
+phenomenon - hodisa
+pollute - ifloslantirmoq
+ridicule - masxara qilmoq
+solar - quyosh
+territory - hudud
+tournament - turnir
+transportation - transport
+Essential 4 · Unit 30
+bill - hisob-kitob, to'lov
+boundary - chegara
+chaos - tartibsizlik
+consistent - izchil
+cyclone - siklon
+doomed - mahkum
+heir - merosxo'r
+martial - jangovar
+organic - organik
+poultry - parranda
+scramble - shoshib o'rmalamoq
+sergeant - serjant
+sheer - sof, to'g'ridan-to'g'ri
+stance - qarash, pozitsiya
+telegraph - telegraf
+textile - to'qimachilik
+tornado - tornado
+typhoon - tayfun
+wail - uvillab yig'lamoq
+wardrobe - kiyim shkafi`,b5_1_15:`Essential 5 · Unit 1
+allot - taqdim qilmoq
+appall - dahshatga tushmoq
+cache - quti
+convenience - qulaylik
+dearth - kamchil
+deliberate - qasddan
+dire - dahshatli
+elapse - o'tmoq (vaqt)
+empathy - hamdardlik
+fanciful - xayoliy
+gripe - xarxasha qilmoq
+grueling - qiyin
+mundane - zerikarli
+opt - tanlamoq
+outrage - g'azab
+paltry - juda kam
+rectify - tuzatmoq
+resourceful - topqir
+sustenance - ozuqa
+tedious - zerikarli
+Essential 5 · Unit 2
+abbey - abbatlik
+abundant - mo'l-ko'l
+adjoin - qo'shni
+ample - yetarli
+arid - quruq
+cathedral - cherkov
+deprive - mahrum qilmoq
+drought - qurg'oqchilik
+eligible - loyiq
+fast - ro'za
+grumble - nolimoq
+inland - ichkari
+moisture - namlik
+nonetheless - baribir
+oath - qasam
+prairie - dasht
+ragged - yirtiq
+rugged - noqulay
+scarce - kam
+speculate - taxmin qilmoq
+Essential 5 · Unit 3
+analytic - mantiqiy
+assert - tasdiqlash
+bachelor - bo'ydoq
+calculus - oliy matematika
+celestial - samoviy
+cognitive - aqliy
+collision - to'qnashuv
+competent - puxta
+diploma - diplom
+excel - juda yaxshi
+geology - geologiya
+harness - foydalanmoq
+intellect - idrok
+keen - zehnli
+mythology - afsona
+physiology - fiziologiya
+radioactive - radioaktiv
+relativity - nisbiylik
+sociology - sotsiologiya
+theoretical - nazariy
+Essential 5 · Unit 4
+administrator - ma'mur
+affluent - boy
+audit - taftish
+automate - avtomatlashtirish
+bribe - pora bermoq
+corrupt - poraxo'r
+dispose - yo'q qilish
+headquarters - shtab-kvartirasi
+incentive - rag'batlantirish
+infrastructure - infratuzilma
+legislate - qonun chiqarmoq
+legitimate - qonuniy
+manipulate - boshqarmoq
+merchandise - tovar
+retail - chakana savdo
+revenue - daromad
+rubbish - axlat
+subsidy - yordam puli
+transaction - savdo bitimi
+violate - buzmoq
+Essential 5 · Unit 5
+assess - baholamoq
+astonish - ajablantirmoq
+commence - boshlamoq
+essence - mohiyat
+extract - ajratmoq
+fabulous - ajoyib
+haste - shoshqaloqlik
+impulse - impuls
+latter - ikkinchisi
+molecule - molekula
+ongoing - davom etayotgan
+pharmaceutical - farmatsevtika
+precise - aniq
+proximity - yaqinlik
+publicity - oshkoralik
+remedy - davolash vositasi
+significance - ahamiyat
+subsequent - navbatdagi
+synthetic - sintetik
+terminal - halokatli
+Essential 5 · Unit 6
+altitude - balandlik
+coastline - sohil bo'yi
+deter - oldini olish
+devise - o'ylab topmoq
+expertise - tajriba
+fracture - yoriq
+impair - buzmoq
+implement - amalga oshirish
+indigenous - mahalliy
+insight - tushuncha
+limb - oyoq-qo'l
+migraine - migren
+optimism - nekbinlik
+peculiar - g'alati
+proficient - malakali
+quest - izlanish
+ridge - tizma
+spouse - turmush o'rtog'i
+thrust - surmoq
+tolerate - toqat qilmoq
+Essential 5 · Unit 7
+aquatic - suvga oid
+biosphere - biosfera
+bizarre - g'alati
+Celsius - Selsiy
+coarse - dag'al
+companion - hamroh
+digest - hazm qilmoq
+duration - davomiylik
+ecology - ekologiya
+feat - g'alaba
+infinite - cheksiz
+nucleus - yadro
+parasite - parazit
+prominent - taniqli
+repetitive - takrorlanadigan
+reproductive - reproduktiv
+temperate - mo'tadil
+tolerance - chidamlilik
+undergo - boshdan kechirmoq
+vulnerable - zaif
+Essential 5 · Unit 8
+adept - mohir
+barren - biyobon
+ceramic - keramika
+culinary - oshxona
+dense - zich
+dignity - qadr-qimmat
+dominate - hukmronlik qilmoq
+edible - yesa bo'ladigan
+hostile - g'azabli
+intake - qabul qilish
+likewise - xuddi shunday
+malnutrition - to'yib ovqatlanmaslik
+medication - dori-darmon
+misconception - noto'g'ri tushuncha
+obscure - noma'lum
+oppress - zulm qilmoq
+peel - shilmoq
+prescription - shifokor retsepti
+respirator - nafas olish qurilmasi
+strive - intilmoq
+Essential 5 · Unit 9
+archaic - qadimiy
+benevolent - xayrixoh
+brass - qalay
+capitalism - kapitalizm
+component - qism
+dependence - qaramlik
+diminish - kamaytirmoq
+drawback - kamchilik
+fad - urf
+impose - singdirmoq
+managerial - boshqaruv
+medieval - o'rta asrlar
+obsolete - eskirgan
+peninsula - yarim orol
+prestige - obro'-e'tibor
+proportion - mutanosiblik
+radical - o'zgacha
+refute - rad etish
+spectacular - ajoyib
+weave - to'qimoq
+Essential 5 · Unit 10
+accountant - hisobchi
+capitalist - sarmoyachi
+contempt - nafrat
+dedicate - bag'ishlamoq
+ditch - xandaq
+enterprise - korxona
+exquisite - nafis
+finance - moliyalashtirmoq
+indifferent - befarq
+irrigate - sug'ormoq
+maximize - oshirmoq
+monetary - pulga oid
+precaution - ehtiyot chorasi
+preliminary - dastlabki
+saturate - to'yintirmoq
+simplicity - oddiylik
+sow - ekmoq
+soy - soya o'somligi
+spade - belkurak
+upcoming - kelgusi
+Essential 5 · Unit 11
+acute - kuchli
+aggression - tajovuz
+banquet - ziyofat
+biography - tarjimai hol
+boost - kuchaytirish
+clap - qarsak chalmoq
+compel - majburlamoq
+dominance - ustunlik
+gorgeous - ajoyib
+inevitable - muqarrar
+legacy - meros
+masterpiece - Nodir asar, shoh asar
+multiple - bir nechta
+narrate - rivoyat qilmoq
+notorious - taniqli
+outdated - eskirgan
+overall - umuman olganda
+partiality - tarafdorlik
+spontaneous - o'z-o'zidan
+virtue - fazilat
+Essential 5 · Unit 12
+anthropology - antropologiya
+applaud - qarsak chalmoq
+appoint - tayinlamoq
+compatible - loyiq
+competence - mahorat
+confer - maslahat bermoq
+consecutive - ketma-ket
+crude - xom
+cube - kub
+feedback - mulohaza
+ignorance - beparvolik
+masculine - erkakcha
+monument - yodgorlik
+muscular - baquvvat
+posture - holat
+situate - o'rnatmoq
+supervise - nazorat qilmoq
+symmetry - simmetriya
+tattoo - tatuirovka
+undergraduate - bakalavr
+Essential 5 · Unit 13
+brook - ariq
+cater - taminlamoq
+considerate - xushmuomala
+consumption - iste'mol
+criteria - mezonlar
+crust - qobiq
+degrade - uyaltirmoq
+entitle - huquq bermoq
+escort - kuzatmoq
+external - tashqi
+facility - qulaylik
+faculty - qobiliyat
+heap - uyum
+hemisphere - yarim shar
+hound - ovchi it
+impersonal - shaxssiz
+ornament - bezak
+pedestrian - piyoda
+sanctuary - muqaddas joy
+spectator - tomoshabin
+Essential 5 · Unit 14
+asset - afzallik
+aspect - jihat
+Braille - Brayl shrifti
+bud - kurtak
+coordinate - muvofiqlashtirish
+disprove - inkor qilmoq
+humanitarian - gumanitar
+hypothesis - faraz
+imprint - kechinma
+informative - informatsion
+optic - ko'rishga oid
+premise - tushuncha
+rack - tokcha
+Renaissance - Uyg'onish davr
+revere - hurmat qilmoq
+simultaneous - bir vaqtda
+skeptic - shubhachi
+spatial - fazoviy
+specify - tasvirlamoq
+wax - mum
+Essential 5 · Unit 15
+accessory - aksessuar
+acquisition - egalik
+adequate - mos keladigan
+cardboard - karton
+dilemma - jumboq
+elaborate - izchil
+facilitate - osonlashtirmoq
+fleet - flot
+grid - panjara
+import - chetdan sotib olmoq
+infer - xulosa qilmoq
+inflate - shishirmoq
+innate - tug'ma
+marble - marmar
+mast - machta
+nausea - ko'ngil aynishi
+naval - dengiz kuchlari
+pouch - qop
+saturated - to'yingan
+updated - yangilangan`,b5_16_30:`Essential 5 · Unit 16
+addict - giyohvand
+archeological - arxeologik
+archeology - arxeologiya
+brainstorm - aqliy hujum
+budget - byudjet
+chaotic - tartibsiz
+cite - takidlamoq
+correspond - mos kelmoq
+courtyard - hovli
+estate - mulk
+fraud - firibgarlik
+hydrogen - vodorod
+integrity - vijdon
+knit - to'qimoq
+outlook - mulohaza
+parachute - parashyut
+prehistoric - tarixdan oldingi
+proponent - tarafdor
+refine - takomillashtirmoq
+restrict - cheklamoq
+Essential 5 · Unit 17
+attorney - advokat
+chronic - surunkali
+discipline - intizom
+donor - donor
+fellow - o'rtoq
+gossip - g'iybat
+graduate - bitirmoq
+graffiti - grafiti
+guardian - vasiy
+implicate - ayblamoq
+kin - qarindosh
+referee - hakam
+sever - uzmoq
+shaft - dasta
+stab - pichoq urmoq
+stimulus - stimul
+suspicion - shubha
+terminate - tugatmoq
+theme - mavzu
+tuition - o'qish puli
+Essential 5 · Unit 18
+aggressive - tajovuzkor
+amnesty - amnistiya
+arena - maydon
+auditorium - auditoriya
+captive - asir
+combat - jang
+commonplace - oddiy
+compound - hudud
+corps - bo'linma
+distract - chalg'itmoq
+dumb - soqov
+foe - dushman
+hack - buzmoq
+meditate - meditatsiya qilmoq
+nick - tilmoq
+provoke - qo'zg'atmoq
+realm - dunyo
+reign - hukmronlik
+rust - zang
+sacred - muqaddas
+Essential 5 · Unit 19
+accordingly - muvofiq
+anchor - langar
+buoy - suzgich
+catastrophe - falokat
+context - kontekst
+designate - tasvirlamoq
+distort - aldamoq
+dock - port
+fore - oldi
+frequent - tez-tez
+genuine - haqiqiy
+grease - surtma
+intricate - murakkab
+offset - yumshatmoq
+overlap - qoplamoq
+precipitate - tezlashtirmoq
+secondhand - ishlatilgan
+slot - tuynuk
+submerge - botirmoq
+tactic - reja
+Essential 5 · Unit 20
+aggregate - yig'ma
+antibiotic - antibiotik
+circuit - o'tkazgich
+complement - qo'shimcha
+compress - siqmoq
+database - ma'lumotlar bazasi
+equivalent - teng
+immune - immunitetga ega
+input - kiritma
+intimate - yaqin
+magnet - magnit
+metabolism - metabolizm
+microchip - mikrochip
+phase - bosqich
+pinch - chimchilamoq
+prevalent - keng tarqalgan
+quantum - kvant
+ratio - nisbat
+spiral - spiral
+viral - virusli
+Essential 5 · Unit 21
+astounded - hayratda qolmoq
+attribute - xususiyat
+bilingual - ikki tilli
+clone - nusxa
+colloquial - so'zlashuv
+cosmetics - kosmetika
+dash - tez harakatlanmoq
+disgust - nafrat
+fluorescent - yorqin
+furious - g'azablangan
+gulf - ko'rfaz
+humanities - gumanitar fanlar
+knot - tugun
+linguist - tilshunos
+participant - ishtirokchi
+plausible - ishonarli
+ritual - marosim
+sibling - qardosh
+skinny - oriq
+vague - noaniq
+Essential 5 · Unit 22
+acid - kislota
+administration - ma'muriyat
+administrative - ma'muriy
+biotechnology - biotexnologiya
+cholesterol - xolesterin
+coalition - ittifoq
+deceptive - aldamchi
+diabetes - diabet
+eliminate - yo'q qilmoq
+erosion - eroziya
+ethics - axloq
+explicit - aniq
+framework - ramka
+manufacture - ishlab chiqarmoq
+mechanism - mexanizm
+minimize - minimallashtirish
+nectar - nektar
+notion - tushuncha
+prone - moyil
+straightforward - to'g'ri
+Essential 5 · Unit 23
+astronomical - ulkan
+atom - atom
+breadth - kenglik
+circumference - atrofi
+comet - kometa
+crater - krater
+crescent - yarim oy
+debris - qoldiqlar
+despair - umidsizlik
+embed - o'rnatmoq
+fragment - parcha
+galaxy - galaktika
+gigantic - ulkan
+gloom - xira
+radiate - nurlanmoq
+roam - sag'imoq
+solitary - yolg'iz
+spectrum - spektr
+sphere - sfera
+status - holat
+Essential 5 · Unit 24
+bankrupt - bankrot
+conform - itoat qilmoq
+employ - ishga olmoq
+expel - quvib yubormoq
+extension - kengaytma
+forthcoming - kelayotgan
+furnish - jihozlamoq
+hygiene - gigiena
+hygienic - gigienik
+landlord - uy egasi
+lease - ijaraga bermoq
+mandatory - majburiy
+mend - tuzatmoq
+mortgage - ipoteka
+personnel - xodimlar
+plumbing - quvurlar
+tenant - ijarachi
+trendy - ommalashgan
+utility - taminot
+whereby - shu bilan
+Essential 5 · Unit 25
+aesthetic - estetik
+arrogant - dimog'dor
+bias - moyillik
+canyon - kanyon
+creek - soy
+drill - burg'ulagich
+executive - boshliq
+fatigue - charchoq
+incline - ko'tarilish
+nasty - yomon
+perceive - sezmoq
+primate - primat
+primitive - ibtidoiy
+stereotype - stereotip
+sticky - yopishqoq
+termite - termit
+thereby - natijada
+trail - iz
+twig - novda
+welfare - farovonlik
+Essential 5 · Unit 26
+behalf - nomidan
+flap - silkitmoq
+glacier - muzlik
+globe - globus
+horizontal - gorizontal
+hum - g'o'ng'illamoq
+inventory - taminot
+inward - ichki
+loaf - non
+oracle - folbin
+orbit - aylanmoq
+overview - umumiy ko'rinish
+preview - oldindan ko'rish
+previous - oldingi
+provide - ta'minlash
+recur - takrorlanmoq
+relevant - kerakli
+rite - marosim
+stall - to'xtatib turmoq
+supernatural - g'ayritabiiy
+Essential 5 · Unit 27
+adapt - moslashmoq
+biological - biologik
+cellular - hujayrali
+dynamic - faol
+fantasy - xayol
+heredity - irsiyat
+internal - ichki
+minimal - minimal
+pioneer - kashfiyotchi
+prescribe - tayinlamoq
+respective - tegishli
+revive - jonlantirish
+rigid - qattiq
+sequence - ketma-ketlik
+substitute - o'rnini bosmoq
+surgeon - jarroh
+therapy - terapiya
+transfer - ko'chirmoq
+transition - o'tish
+transplant - a'zo ko'chirish
+Essential 5 · Unit 28
+aquarium - akvarium
+arbitrary - o'zidan-o'zi
+autobiography - tarjimai hol
+convention - odatiy holat
+gracious - mehribon
+improve - takomillashtirmoq
+insulate - himoyalamoq
+intrigue - qiziqish uyg'otmoq
+longevity - uzoq umr
+misplace - yo'qotib qo'ymoq
+naughty - quloqsiz
+norm - norma
+orangutan - orangutan
+overload - ortiqcha yuklamoq
+philanthropy - xayriya
+probe - surishtirmoq
+recipient - qabul qiluvchi
+reptile - sudralib yuruvchi
+thrive - yashnamoq
+ultimate - yakuniy
+Essential 5 · Unit 29
+antique - antiqa
+applicant - ariza beruvchi
+artifact - artefakt
+authentic - haqiqiy
+chronology - xronologiya
+diplomat - diplomat
+epic - doston
+excerpt - parcha
+fossil - toshqotma
+humiliate - kamsitmoq
+lyric - lirik
+majesty - ulug'vorlik
+monarch - monarx
+precede - oldinda
+punctual - punktual
+recruit - yollamoq
+refund - pulni qaytarish
+register - ro'yxatdan o'tish
+renown - taniqli
+tusk - so'yloq
+Essential 5 · Unit 30
+burden - yuk
+compromise - murosaga kelish
+craft - yasamoq
+crook - yomon odam
+currency - valyuta
+enigma - jumboq
+fragile - mo'rt
+hybrid - gibrid
+innocence - aybsizlik
+merge - birlashtirish
+moderate - o'rtacha
+overwhelm - oshib ketmoq
+perception - idrok
+reunion - uchrashuv
+rig - fitna tuzmoq
+shiver - titroq
+sociable - kirishimli
+talkative - gapdon
+tow - tortish
+tramp - qadam tashlamoq`,b6_1_15:`Essential 6 · Unit 1
+alleviate - yengillashtirmoq
+astrology - munajjimlik
+differentiate - farqlamoq
+disrupt - buzmoq, to'xtatmoq
+equation - tenglama
+err - xato qilmoq
+erroneous - noto'g'ri
+frantic - telba, vahimali
+hull - kema korpusi
+inadvertent - tasodifiy
+improvise - o'ylamay ijro etmoq
+latitude - kenglik
+mariner - dengizchi
+multitude - ko'plik, olomon
+nuisance - bezovtalik
+permanence - doimiylik
+revolve - aylanmoq
+soothe - tinchlantirmoq
+stranded - qolib ketgan
+volatile - beqaror
+Essential 6 · Unit 2
+arduous - mashaqqatli
+attain - erishmoq
+coexist - birga yashamoq
+conceive - tasavvur qilmoq
+dubious - shubhali
+ego - men, o'zlik
+elastic - elastik, cho'ziluvchan
+endeavor - harakat qilmoq
+engrave - o'yib yozmoq
+excavate - qazmoq
+jagged - notekis, o'tkir
+locale - joy, makon
+mold - qolip, mog'or
+outright - ochiqdan-ochiq
+periphery - chekka
+plaster - gips, suvoq
+shovel - belkurak
+skeletal - skeletga oid
+terrestrial - yerdagi
+vicious - shafqatsiz
+Essential 6 · Unit 3
+absurd - bema'ni
+anemia - kamqonlik
+aristocracy - aristokratiya
+aristocrat - aristokrat
+attire - kiyim
+craze - urf, havas
+enlarge - kattalashtirmoq
+excess - ortiqcha
+feminine - ayolga xos
+hallmark - belgi, nishon
+pad - yostiqcha
+predominant - ustun
+reputable - obro'li
+rouge - upa-elik
+signify - anglatmoq
+strap - tasma
+tangle - chalkashmoq
+vanity - manmanlik
+vie - bahslashmoq
+vulgar - qo'pol
+Essential 6 · Unit 4
+attic - cherdak
+chunk - bo'lak
+civic - fuqarolik
+descent - tushish
+din - shovqin
+dissatisfy - norozi qilmoq
+fuss - g'ala-g'ovur
+gourmet - mazali taom ixlosmandi
+hence - shu sababli
+intrinsic - ichki, tabiiy
+kettle - choynak
+ministry - vazirlik
+ordeal - og'ir sinov
+outspoken - ochiqko'ngil
+overwork - ortiqcha ishlamoq
+particular - muayyan
+pungent - o'tkir (hid)
+snore - xurrak otmoq
+soundly - qattiq (uxlamoq)
+superintendent - nazoratchi
+Essential 6 · Unit 5
+alternate - navbatma-navbat
+apologetic - kechirim so'ragan
+benign - yaxshi xulqli, zararsiz
+char - kuydirmoq
+clarify - aniqlashtirmoq
+distress - qayg'u
+dogged - qat'iyatli
+ensue - kelib chiqmoq
+gasp - nafas qisilmoq
+negotiate - muzokara qilmoq
+overdose - me'yoridan ortiq doza
+persuasion - ishontirish
+relay - uzatmoq
+reluctance - istamaslik
+restate - qayta bayon qilmoq
+sesame - kunjut
+sip - ho'plamoq
+verge - chekka, yaqinlashmoq
+wary - ehtiyotkor
+waver - ikkilanmoq
+Essential 6 · Unit 6
+ashore - qirg'oqqa
+contradict - zid bo'lmoq
+counterpart - hamkasb, mos juft
+devoid - mahrum
+diverge - ajralmoq
+elude - qochib qutulmoq
+embryo - homila
+fend - himoya qilmoq
+fictitious - uydirma
+gazette - gazeta
+homogeneous - bir jinsli
+obstruct - to'sqinlik qilmoq
+plunge - sho'ng'imoq
+prolong - cho'zmoq
+publicize - ommaga e'lon qilmoq
+sparse - siyrak
+surplus - ortiqcha
+theorize - nazariya qurmoq
+verify - tekshirmoq
+vigorous - baquvvat
+Essential 6 · Unit 7
+altar - qurbongoh
+arthritis - artrit
+botany - botanika
+credible - ishonchli
+deceased - marhum
+deception - aldov
+decipher - shifrni ochmoq
+dung - go'ng
+dusk - shom
+gratify - mamnun qilmoq
+hone - charxlamoq
+mash - ezmoq
+ornate - bezakli
+pneumonia - zotiljam
+psychic - ruhiy
+psychotic - ruhiy kasal
+scope - doira, imkoniyat
+sinister - yovuz
+strife - nizo
+therapeutic - davolovchi
+Essential 6 · Unit 8
+congested - gavjum, tiqilib qolgan
+courier - kuryer
+deform - shaklini buzmoq
+etiquette - odob qoidalari
+exclusive - eksklyuziv
+freight - yuk
+garment - kiyim
+insomnia - uyqusizlik
+intuitive - sezgiga asoslangan
+liable - javobgar
+obsess - o'ylab tinchimaslik
+overboard - kemadan tashqariga
+premium - mukofot, yuqori sifatli
+privilege - imtiyoz
+propel - itarib yurgizmoq
+socialize - muloqot qilmoq
+suppress - bostirmoq
+tram - tramvay
+unsettle - bezovta qilmoq
+warp - egilmoq
+Essential 6 · Unit 9
+artery - arteriya
+deterioration - yomonlashuv
+elusive - ushlab bo'lmas
+forage - ozuqa izlamoq
+impede - to'sqinlik qilmoq
+induce - keltirib chiqarmoq
+inseparable - ajralmas
+invalid - yaroqsiz
+magnify - kattalashtirmoq
+mainstream - asosiy oqim
+microbe - mikrob
+negligible - ahamiyatsiz
+paralysis - falaj
+pest - zararkunanda
+prevail - ustun kelmoq
+respiration - nafas olish
+rupture - yorilish
+savage - vahshiy
+stun - gangitmoq
+susceptible - moyil, ta'sirchan
+Essential 6 · Unit 10
+accumulate - to'planmoq
+aerial - havodagi
+apparatus - apparat
+avalanche - ko'chki
+consistency - izchillik
+convection - konveksiya
+discharge - bo'shatmoq
+intact - butun
+mortal - o'lik, o'limli
+omen - alomat
+overcast - bulutli
+poignant - ta'sirli
+ranger - o'rmon qo'riqchisi
+rubble - vayronalar
+seclude - ajratib qo'ymoq
+sideways - yon tomonga
+sob - ho'ngrab yig'lamoq
+sober - hushyor
+speck - zarra
+upbringing - tarbiya
+Essential 6 · Unit 11
+advocate - himoyachi
+authorize - ruxsat bermoq
+civilian - tinch aholi
+commodity - tovar
+conquest - bosib olish
+disclose - oshkor qilmoq
+dynamics - dinamika
+enroll - ro'yxatga olinmoq
+envious - hasadgo'y
+euphoria - hayajonli shodlik
+festive - bayramona
+jolly - quvnoq
+lentil - yasmiq
+marshal - marshal
+morale - ruhiy holat
+prophecy - bashorat
+sage - donishmand
+senate - senat
+sentiment - tuyg'u
+unrest - notinchlik
+Essential 6 · Unit 12
+adorn - bezamoq
+bliss - baxt-saodat
+butler - kalitdor
+cramp - tortishish
+dilapidated - vayron bo'lgan
+evoke - uyg'otmoq
+farewell - xayrlashuv
+faucet - jo'mrak
+filth - iflos narsa
+flaw - nuqson
+grin - tirjaymoq
+housekeeping - uy xo'jaligi
+mound - tepalik
+numb - uyushgan
+reckless - bepisand
+slate - shifer
+stool - taburet
+testament - vasiyat
+timber - yog'och
+valve - klapan
+Essential 6 · Unit 13
+certify - tasdiqlamoq
+collaborate - hamkorlik qilmoq
+compile - tuzmoq
+counteract - qarshi ta'sir qilmoq
+curb - jilovlamoq
+diagnose - tashxis qo'ymoq
+enact - qonun chiqarmoq
+federation - federatsiya
+gross - yalpi
+humane - insonparvar
+intolerable - chidab bo'lmas
+needy - muhtoj
+onset - boshlanish
+pledge - va'da
+prohibit - taqiqlamoq
+rash - toshma
+render - ko'rsatmoq
+smallpox - chechak
+transmit - uzatmoq
+vow - qasamyod
+Essential 6 · Unit 14
+camouflage - niqoblash
+contemplate - mulohaza qilmoq
+contend - kurashmoq
+cot - yig'ma karavot
+enlist - safga yozilmoq
+frontier - chegara
+handbook - qo'llanma
+hesitant - ikkilangan
+lush - ko'm-ko'k
+marrow - ko'mik
+outfit - kiyim-kechak
+paw - panja
+quiver - titramoq
+splendid - ajoyib
+stray - adashgan
+substantial - sezilarli
+torch - mash'al
+tract - maydon, trakt
+vigil - hushyorlik
+weary - horg'in
+Essential 6 · Unit 15
+adhere - yopishmoq, rioya qilmoq
+administer - boshqarmoq
+compassionate - rahmdil
+contaminate - ifloslantirmoq
+deficiency - yetishmovchilik
+epidemic - epidemiya
+hazard - xavf
+imperative - zarur
+intestines - ichaklar
+manifest - namoyon bo'lmoq
+metabolic - moddalar almashinuvi
+overcrowded - tiqilinch
+paramount - eng muhim
+practitioner - amaliyotchi
+provision - ta'minot
+replenish - to'ldirmoq
+sterile - steril
+upgrade - yangilamoq
+viable - hayotiy
+voluntary - ixtiyoriy`,b6_16_30:`Essential 6 · Unit 16
+amid - orasida
+backstage - sahna orqasi
+billionaire - milliarder
+brute - vahshiy
+clumsy - qo'pol, uquvsiz
+collide - to'qnashmoq
+culprit - aybdor
+evacuate - evakuatsiya qilmoq
+flammable - yonuvchan
+mob - olomon
+premature - muddatidan oldingi
+resent - ranjimoq
+satire - satira
+scrutiny - sinchkovlik bilan tekshirish
+segregate - ajratmoq
+subject - mavzu, fuqaro
+testify - guvohlik bermoq
+tumult - g'alayon
+underestimate - kam baholamoq
+uproar - shov-shuv
+Essential 6 · Unit 17
+accelerate - tezlashtirmoq
+anew - qaytadan
+defect - nuqson
+dreary - zerikarli, g'amgin
+duplicate - nusxa ko'chirmoq
+electromagnetic - elektromagnit
+electron - elektron
+glide - sirpanmoq
+ingenious - ixtirochi, topqir
+innovation - yangilik
+innovative - yangicha
+launch - ishga tushirmoq
+meteorological - meteorologik
+meteorology - meteorologiya
+penetrate - kirib bormoq
+propulsion - harakatlantirish
+simulate - taqlid qilmoq
+spur - turtki bermoq
+stimulate - rag'batlantirmoq
+tenacious - qat'iyatli
+Essential 6 · Unit 18
+beforehand - oldindan
+centigrade - Selsiy
+chatter - valaqlamoq
+concerto - konsert
+condense - quyuqlashtirmoq
+cove - qo'ltiq, ko'rfazcha
+deteriorate - yomonlashmoq
+exterior - tashqi
+freeway - tezyurar yo'l
+hearty - samimiy, to'yimli
+hospitable - mehmondo'st
+manor - mulk, qasr
+monastery - monastir
+nursery - bolalar bog'chasi
+outstretched - cho'zilgan
+parcel - posilka
+profile - profil
+vivacious - jonli
+winding - egri-bugri
+zip - zanjir, yelmoq
+Essential 6 · Unit 19
+airway - nafas yo'li
+Almighty - qodir Xudo
+advent - kelish
+constellation - yulduz turkumi
+definitive - qat'iy
+equate - tenglashtirmoq
+inhale - nafas olmoq
+invoke - chaqirmoq
+lunar - oyga oid
+novelty - yangilik
+outmoded - eskirgan
+personalize - shaxsiylashtirmoq
+pertain - taalluqli bo'lmoq
+primal - dastlabki
+psychiatric - ruhiy-psixiatrik
+psychiatry - psixiatriya
+reflex - refleks
+seizure - tutqanoq
+session - seans, majlis
+utensil - idish-tovoq
+Essential 6 · Unit 20
+adhesive - yelim
+adverse - salbiy
+dependency - qaramlik
+dump - tashlamoq
+eternal - abadiy
+fluctuate - o'zgarib turmoq
+fro - orqaga
+inclusion - qo'shish
+intermediate - oraliq
+intermittent - uzluksiz bo'lmagan
+mentor - murabbiy
+phoenix - anqo qushi
+photosynthesis - fotosintez
+pollen - gulchang
+regain - qaytarib olmoq
+reverse - teskari
+swarm - to'da
+texture - tuzilish
+tickle - qitiqlamoq
+vibrant - jonli
+Essential 6 · Unit 21
+abolish - bekor qilmoq
+amend - tuzatmoq
+aspire - intilmoq
+censor - tsenzura qilmoq
+charter - nizom
+constitution - konstitutsiya
+cosmopolitan - kosmopolit
+disseminate - tarqatmoq
+flatter - xushomad qilmoq
+infamous - badnom
+lame - cho'loq
+limp - oqsamoq
+outburst - portlash
+pathological - patologik
+phenomenal - ajoyib
+poll - so'rov
+remorse - pushaymonlik
+secrecy - sir saqlash
+tackle - hal qilmoq
+trance - transa, hushsizlik
+Essential 6 · Unit 22
+coward - qo'rqoq
+delete - o'chirmoq
+firsthand - bevosita
+earnest - jiddiy
+ethnic - etnik
+exclude - chiqarib tashlamoq
+fluent - ravon
+imperial - imperator
+inclusive - o'z ichiga olgan
+legislature - qonunchilik organi
+linguistic - lingvistik
+monolingual - bir tilli
+nationality - millat
+patriot - vatanparvar
+prosecute - sudga bermoq
+racial - irqiy
+solemn - tantanali
+solidarity - hamjihatlik
+tact - xushmuomalalik
+undermine - zaiflashtirmoq
+Essential 6 · Unit 23
+allocate - ajratmoq
+appetizing - ishtaha ochuvchi
+blizzard - bo'ron, qor bo'roni
+cavity - kovak
+clockwise - soat yo'nalishi bo'yicha
+concentric - konsentrik
+courtesy - xushmuomalalik
+crisp - qarsildoq
+discord - nizo
+frigid - juda sovuq
+generate - hosil qilmoq
+glacial - muzlik
+interchange - almashmoq
+locker - shkafcha
+multicultural - ko'p madaniyatli
+omission - tushirib qoldirish
+oversee - nazorat qilmoq
+pierce - teshmoq
+replicate - takrorlamoq
+wavy - to'lqinsimon
+Essential 6 · Unit 24
+abide - rioya qilmoq
+conversion - aylantirish
+cram - tiqmoq, yodlamoq
+defer - kechiktirmoq
+export - eksport qilmoq
+fume - tutun, bug'
+habitual - odatiy
+justify - oqlamoq
+output - chiqim, mahsulot
+overpopulation - aholi ortiqchaligi
+patent - patent
+penalize - jazolamoq
+petroleum - neft
+prototype - prototip
+scrap - parcha, chiqindi
+sector - sektor
+subscribe - obuna bo'lmoq
+subsist - tirik qolmoq
+suspend - to'xtatib turmoq
+synthesis - sintez
+Essential 6 · Unit 25
+acrobat - akrobat
+advocacy - himoya qilish
+communal - jamoaviy
+fluid - suyuqlik
+harmonize - uyg'unlashtirmoq
+industrious - mehnatsevar
+inventive - ixtirochi
+judicial - sud
+Mandarin - mandarin tili
+metropolitan - yirik shahar
+mimic - taqlid qilmoq
+misguided - noto'g'ri yo'lga solingan
+rehearse - mashq qilmoq
+scorn - mensimaslik
+sensory - sezgi
+staple - asosiy mahsulot
+statute - qonun
+veteran - faxriy
+villain - yovuz odam
+vine - uzum toki
+Essential 6 · Unit 26
+constrain - cheklamoq
+depot - ombor
+emulate - taqlid qilmoq
+forefinger - ko'rsatkich barmoq
+guts - jasorat, ichak
+inherent - tabiiy
+intimidate - qo'rqitmoq
+janitor - farrosh
+moist - nam
+nope - yo'q
+prod - turtmoq
+ransom - to'lov (garov)
+restrain - tiymoq
+saliva - so'lak
+spit - tupurmoq
+sprint - yugurmoq
+stunt - hiyla, tryuk
+tolerant - bag'rikeng
+vampire - vampir
+yawn - esnamoq
+Essential 6 · Unit 27
+analogy - o'xshatish
+ancestry - nasl-nasab
+archer - kamonchi
+conspiracy - fitna
+deputy - o'rinbosar
+earl - graf
+fragrant - xushbo'y
+funnel - voronka
+hereditary - irsiy
+hymn - madhiya
+invert - ag'darmoq
+prey - o'lja
+procession - yurish, karvon
+prophet - payg'ambar
+sarcastic - kinoyali
+seasoning - ziravor
+sodium - natriy
+tyranny - zulm
+tyrant - zolim
+vinegar - sirka
+Essential 6 · Unit 28
+adjoining - qo'shni
+allege - da'vo qilmoq
+arch - ark, tonoz
+assemble - yig'moq
+casualty - qurbon
+erect - qurmoq
+foul - sasigan
+hectare - gektar
+heighten - kuchaytirmoq
+hospitality - mehmondorchilik
+mansion - saroy
+outnumber - sonidan oshmoq
+overjoyed - behad xursand
+pasture - yaylov
+petition - ariza
+renovate - ta'mirlamoq
+revise - qayta ko'rib chiqmoq
+slab - plita
+terrace - ayvon, terrasa
+turf - maysa
+Essential 6 · Unit 29
+analogous - o'xshash
+binoculars - durbin
+bulk - hajm
+comprise - tarkib topmoq
+depict - tasvirlamoq
+dual - ikkilik
+Fahrenheit - Farengeyt
+fulfill - bajarmoq
+grove - bog'cha
+ore - ruda
+outback - chekka hudud
+outweigh - ustun kelmoq
+paradox - paradoks
+pier - pristan
+shortcut - qisqa yo'l
+tariff - tarif, bojxona
+thermometer - termometr
+tilt - egilmoq
+vice versa - aksincha
+whereabouts - turgan joyi
+Essential 6 · Unit 30
+amber - qahrabo
+charcoal - ko'mir
+columnist - sharhlovchi
+courteous - xushmuomala
+credentials - hujjatlar, malaka
+crickets - chigirtkalar
+delta - delta
+detergent - yuvish vositasi
+euphemism - evfemizm
+expire - muddati tugamoq
+granite - granit
+gravel - shag'al
+haunt - tez-tez bormoq, arvoh
+liberal - liberal
+maze - labirint
+moss - moxor
+peck - cho'qimoq
+pebble - mayda tosh
+reservoir - suv ombori
+streak - chiziq, ketma-ketlik`};
+const DAY=864e5,STEPS=[0,1,3,7,14,30],K="wordmind_v1";
+let S;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!S){S={words:[],xp:0,streak:0,last:"",log:{},goal:10,theme:"auto",sessions:0}}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast("Saqlab boʻlmadi")}};
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+function toast(t){const e=$("#toast");e.textContent=t;e.style.opacity=1;setTimeout(()=>e.style.opacity=0,2200)}
+function addWords(txt){let unit="Import",n=0,dup=0;
+ txt.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l)return;
+  let m=l.match(/^(.*?)\s+[-–—]\s+(.+)$/)||l.match(/^([^,;\t]+)[,;\t]\s*(.+)$/);
+  if(!m){if(/unit\s*\d+/i.test(l)||l.length<40)unit=l;return}
+  const en=m[1].trim(),uz=m[2].trim();if(!en||!uz||en.length>40)return;
+  if(S.words.some(w=>w.en.toLowerCase()==en.toLowerCase()&&w.unit==unit)){dup++;return}
+  S.words.push({id:Date.now()+Math.random(),en,uz,unit,box:-1,due:0,ok:0,bad:0,first:0,lastRev:0});n++});
+ save();return{n,dup}}
+const status=w=>w.box<0?"new":w.box>=4?"done":"prog";
+const isDue=w=>w.box>=0&&w.due<=Date.now();
+function grade(w,good){const t=Date.now();if(!w.first)w.first=t;w.lastRev=t;
+ const was=(w.st||0)>=3;
+  if(good){w.ok++;w.st=(w.st||0)+1;S.xp+=10;
+   if(was){w.box=Math.min(Math.max(w.box,4)+1,5);w.due=t+STEPS[w.box]*DAY}
+   else if(w.st>=3){w.box=4;w.due=t+STEPS[4]*DAY}
+   else{w.box=Math.max(w.box,0);w.due=t}}
+  else{w.bad++;w.st=0;w.box=0;w.due=t;S.xp+=1}
+ const d=today();S.log[d]=(S.log[d]||0)+1;S.best=Math.max(S.best||0,S.log[d]);
+ if(S.last!=d){const y=new Date(Date.now()-DAY).toISOString().slice(0,10);S.streak=S.last==y?S.streak+1:1;S.last=d}
+ save()}
+const AC={};
+function speak(t){
+ const fb=()=>{if("speechSynthesis" in window){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;speechSynthesis.speak(u);return}catch(e){}}toast("Audio ishlamadi. Internetni tekshiring")};
+ try{let a=AC[t];if(!a){a=AC[t]=new Audio("https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q="+encodeURIComponent(t));a.preload="auto";a.onerror=()=>{delete AC[t];fb()}}
+  Object.values(AC).forEach(x=>{try{x.pause()}catch(e){}});try{a.currentTime=0}catch(e){}
+  const p=a.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name=="NotAllowedError")toast("🔊 tugmasini bosing");else fb()})}catch(e){fb()}}
+window.speak=speak;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const sc=()=>S.cur?S.words.filter(w=>w.unit==S.cur):S.words;let R=[];S.words.forEach(w=>{if(w.st==null)w.st=w.box>=4?3:0});
+function choose(pool){if(!pool.length)return null;const rc=R.slice(-3),ok=x=>!rc.includes(x.id);
+ let c=pool.filter(w=>isDue(w)&&ok(w));if(!c.length)c=pool.filter(w=>w.box<0&&ok(w));if(!c.length)c=pool.filter(ok);
+ if(!c.length){c=pool.filter(w=>w.id!=R[R.length-1]);if(!c.length)c=pool}
+ const w=pick(c);R.push(w.id);if(R.length>10)R.shift();return w}
+function nextWord(){return choose(sc().filter(w=>isDue(w)||w.box<0))}
+function opts(w,key){const o=S.words.filter(x=>x.id!=w.id&&x[key]!=w[key]);const r=[];
+ while(r.length<2&&o.length)r.push(o.splice(Math.floor(Math.random()*o.length),1)[0]);
+ return[...r,w].sort(()=>Math.random()-.5)}
+let view="home",flt="new",L={},P={};
+const NAV=[["home","🏠","Bosh"],["books","📖","Oʻrganish"],["prac","🎯","Mashq"],["me","⚙️","Profil"]];
+function go(v){view=v;L={};P={};render()}window.go=go;
+function render(){document.documentElement.dataset.theme=S.theme=="auto"?"":S.theme;
+ $("#nav").innerHTML=NAV.map(n=>`<button class="${view==n[0]?"on":""}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join("");
+ $("#app").innerHTML=({home,learn,prac,me,books})[view]();window.scrollTo(0,0)}
+const num=u=>+((u.match(/unit\s*(\d+)/i)||[])[1]||0);
+function books(){const g={};S.words.forEach(w=>{const p=w.unit.split(" · "),b=p.length>1?p[0]:"Import";g[b]=g[b]||{};(g[b][w.unit]=g[b][w.unit]||[]).push(w)});
+ const sl=`<div class="card"><div class="mu">${S.cur?"Hozirgi unit: <b>"+esc(S.cur)+"</b>":"Hozir: barcha soʻlzlar aralash"}</div>${S.cur?`<button class="btn g" onclick="S.cur=null;save();render()">Barcha soʻlzlar bilan oʻrganish</button>`:""}</div>`;
+ if(!L.b){L.bn=Object.keys(g);return`<h1>Kitoblar</h1>${sl}`+L.bn.map((b,i)=>{const a=Object.values(g[b]).flat(),d=a.filter(w=>status(w)=="done").length;return`<div class="card" onclick="L.b=L.bn[${i}];render()"><b style="font-size:20px">${esc(b)}</b><div class="mu">${Object.keys(g[b]).length} unit · ${a.length} soʻz · ${d} oʻrganilgan</div><div class="bar"><i style="width:${d/a.length*100}%"></i></div></div>`}).join("")}
+ const us=L.us=Object.keys(g[L.b]||{}).sort((a,b)=>num(a)-num(b));
+ return`<button class="chip" onclick="L.b=null;render()">← Kitoblar</button><h1>${esc(L.b)}</h1>${sl}`+us.map((u,i)=>{const a=g[L.b][u],dn=a.filter(w=>status(w)=="done").length,sn=a.filter(w=>w.box>=0).length,dd=a.filter(isDue).length;return`<div class="card"><b style="font-size:18px">${esc(u.split(" · ").pop())}</b><div class="mu">${a.length} soʻz · ${sn} koʻrilgan · ${dn} oʻrganilgan${dd?" · "+dd+" takrorlash":""}</div><div class="bar"><i style="width:${sn/a.length*100}%"></i></div><div class="row"><button class="btn" onclick="st(${i},0)">📖 Oʻrganish</button><button class="btn g" onclick="st(${i},1)">🎯 Mashq</button></div></div>`}).join("")}
+window.st=(i,m)=>{S.cur=L.us[i];save();go(m?"prac":"learn")};
+function home(){const t=S.words.length,c={new:0,prog:0,done:0};S.words.forEach(w=>c[status(w)]++);
+ const due=S.words.filter(isDue).length,n=S.words.filter(w=>w.ok+w.bad).reduce((a,w)=>[a[0]+w.ok,a[1]+w.bad],[0,0]),
+ acc=n[0]+n[1]?Math.round(n[0]/(n[0]+n[1])*100)+"%":"—",td=S.log[today()]||0,lv=Math.floor(S.xp/100)+1;
+ const wk=[...Array(7)].map((_,i)=>S.log[new Date(Date.now()-(6-i)*DAY).toISOString().slice(0,10)]||0),mx=Math.max(...wk,1);
+ return`<h1>WORDMIND AI</h1><div class="mu">Aqlli oʻrgan. Uzoqroq eslab qol.</div>
+ <div class="card"><div class="mu">Bugungi maqsad</div><b style="font-size:24px">${td} / ${S.goal} soʻz</b>
+ <div class="bar"><i style="width:${Math.min(100,td/S.goal*100)}%"></i></div>
+ <div class="mu">⭐ ${S.xp} XP · ${lv}-daraja · 🔥 ${S.streak} kun ketma-ket</div></div>
+ <button class="btn" onclick="go('learn')">${due?"Takrorlashni boshlash ("+due+")":"OʻRGANISHNI BOSHLASH"}</button>
+ <div class="grid"><div class="stat"><b>${t}</b><span class="mu">Jami soʻz</span></div><div class="stat"><b>${c.new}</b><span class="mu">Oʻrganilmagan</span></div>
+ <div class="stat"><b>${c.prog}</b><span class="mu">Jarayonda</span></div><div class="stat"><b>${c.done}</b><span class="mu">Oʻrganilgan</span></div>
+ <div class="stat"><b>${due}</b><span class="mu">Takrorlash kerak</span></div><div class="stat"><b>${acc}</b><span class="mu">Aniqlik</span></div></div>
+ <div class="card"><div class="mu">Kitob bajarilishi: ${t?Math.round(c.done/t*100):0}%</div><div class="bar"><i style="width:${t?c.done/t*100:0}%"></i></div></div>
+ <div class="card"><div class="mu">Haftalik faollik</div><div style="display:flex;align-items:flex-end;gap:6px;height:70px;margin-top:8px">
+ ${wk.map(v=>`<div style="flex:1;background:var(--ac);border-radius:6px;height:${Math.max(4,v/mx*100)}%;opacity:${v?1:.25}"></div>`).join("")}</div></div>`}
+function learn(){const w=L.w||(L.w=nextWord());
+ if(!w)return`<h1>Tayyor! 🎉</h1><div class="card">Hozircha takrorlash yoki yangi soʻz yoʻq.</div><button class="btn" onclick="go('books')">Kitoblarga oʻtish</button>`;
+ const k=w.box<0?"Yangi soʻz":isDue(w)?"Takrorlash":"";
+ return`<div class="mu">${esc(w.unit)} · ${k}</div><div class="card"><div class="big">${esc(w.en)}</div>
+ <div style="text-align:center"><button class="sp" onclick="speak('${esc(w.en).replace(/'/g,"\\'")}')">🔊</button></div>
+ ${L.show?`<div class="big" style="font-size:24px;color:var(--ac)">${esc(w.uz)}</div>${w.mn?`<div class="mu" style="text-align:center">💡 ${esc(w.mn)}</div>`:""}${w.ex?`<div class="mu" style="text-align:center;margin-top:6px"><i>${esc(w.ex)}</i></div>`:""}`:`<div class="mu" style="text-align:center;margin-top:12px">Avval maʼnosini eslab koʻring…</div>`}</div>
+ ${L.show?`<div class="row"><button class="btn g" onclick="rate(0)">Mashq kerak</button><button class="btn" onclick="rate(1)">Esladim</button></div>`
+ :`<button class="btn" onclick="L.show=1;speak(L.w.en);render()">Tarjimani koʻrsatish</button>`}`}
+window.rate=g=>{grade(L.w,g);L={};render()};
+function prac(){if(!P.mode)return`<h1>Mashq</h1><div class="mu">Faol eslab qolish — javobni oʻzingiz topasiz.</div>
+ ${S.words.length<3?`<div class="card">Kamida 3 ta soʻz kerak.</div>`:[["audio","🔊 Audio: eshit va maʼnosini top"],["tr","🔤 Tarjima: inglizcha soʻzni tanla"],["spell","✍️ Imlo: inglizcha yozing"],["sent","🧩 Gap: boʻsh joyni toʻldiring"]].map(m=>`<button class="btn g" onclick="P.mode='${m[0]}';render()">${m[1]}</button>`).join("")}`;
+ const pool=P.mode=="sent"?sc().filter(x=>x.ex&&x.ex.toLowerCase().includes(x.en.toLowerCase())):sc();if(!pool.length)return`<button class="chip" onclick="go('prac')">← Rejimlar</button><div class="card">Gap rejimi uchun Bu rejim uchun misol gaplari bor soʻzlar kerak.</div>`;const w=P.w||(P.w=choose(pool));
+ let body="";const m=P.mode;
+ if(m=="audio"){P.o=P.o||opts(w,"uz");body=`<div class="card" style="text-align:center"><button class="sp" style="width:72px;height:72px;font-size:30px" onclick="speak('${esc(w.en).replace(/'/g,"\\'")}')">🔊</button><div class="mu">Nimani eshityapsiz?</div></div>`+P.o.map(o=>`<button class="opt ${P.done?(o.id==w.id?"ok":P.pk==o.id?"no":""):""}" onclick="ans(${o.id})">${esc(o.uz)}</button>`).join("");if(!P.sp){P.sp=1;setTimeout(()=>speak(w.en),300)}}
+ else if(m=="sent"){P.o=P.o||opts(w,"en");const ix=w.ex.toLowerCase().indexOf(w.en.toLowerCase()),bl=w.ex.slice(0,ix)+"_____"+w.ex.slice(ix+w.en.length);body=`<div class="card"><div class="mu">Boʻsh joyga mos soʻzni tanlang:</div><div style="font-size:20px;margin-top:8px">${esc(bl)}</div><div class="mu" style="margin-top:6px">${esc(w.uz)}</div></div>`+P.o.map(o=>`<button class="opt ${P.done?(o.id==w.id?"ok":P.pk==o.id?"no":""):""}" onclick="ans(${o.id})">${esc(o.en)}</button>`).join("")}
+ else if(m=="tr"){P.o=P.o||opts(w,"en");body=`<div class="card"><div class="mu">Inglizcha soʻzni toping:</div><div class="big" style="font-size:26px">${esc(w.uz)}</div></div>`+P.o.map(o=>`<button class="opt ${P.done?(o.id==w.id?"ok":P.pk==o.id?"no":""):""}" onclick="ans(${o.id})">${esc(o.en)}</button>`).join("")}
+ else body=`<div class="card"><div class="mu">Inglizcha yozing:</div><div class="big" style="font-size:26px">${esc(w.uz)}</div></div><input id="sp" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="English word…" ${P.done?"disabled":""} value="${esc(P.val||"")}">${P.done?"":`<button class="btn" onclick="spell()">Tekshirish</button>`}`;
+ const fb=P.done?`<div class="card" style="border:2px solid var(--${P.good?"ok":"no"})">${P.good?"✅ Toʻgʻri!":"❌ Xato. Toʻgʻri javob: <b>"+esc(w.en)+"</b> — "+esc(w.uz)}</div><button class="btn" onclick="nx()">Davom etish</button>`:"";
+ return`<button class="chip" onclick="go('prac')">← Rejimlar</button>${body}${fb}`}
+window.ans=id=>{if(P.done)return;P.pk=id;P.good=id==P.w.id;P.done=1;grade(P.w,P.good);render()};
+window.spell=()=>{const v=$("#sp").value.trim();if(!v)return;P.val=v;P.good=v.toLowerCase()==P.w.en.toLowerCase();P.done=1;grade(P.w,P.good);render()};
+window.nx=()=>{const m=P.mode;P={mode:m};render();const i=$("#sp");if(i)i.focus()};
+window.rs=()=>{try{const o=JSON.parse($('#bk').value);if(!Array.isArray(o.words))throw 0;S=o;save();render();toast("Tiklandi")}catch(e){toast("Zaxira notoʻgʻri")}};
+function me(){const dn=S.words.filter(w=>status(w)=="done").length,tot=S.words.reduce((a,w)=>a+w.ok,0),B=[["🌱","Birinchi 10 toʻgʻri javob",tot>=10],["📘","10 soʻz oʻrganildi",dn>=10],["🔥","7 kunlik streak",S.streak>=7],["⭐","500 XP",S.xp>=500],["🏆","Bir kunda 30 ta javob",(S.best||0)>=30]];return`<h1>Profil</h1><div class="card"><div class="mu">Eng yaxshi kun: ${S.best||0} ta javob</div>${B.map(b=>`<div class="w"><span>${b[0]} ${b[1]}</span><span>${b[2]?"✅":"🔒"}</span></div>`).join("")}</div><div class="card"><div class="mu">Kunlik maqsad (soʻz)</div><div class="row" style="align-items:center"><button class="btn g" onclick="S.goal=Math.max(5,S.goal-5);save();render()">−</button><div class="big" style="margin:0">${S.goal}</div><button class="btn g" onclick="S.goal+=5;save();render()">+</button></div></div>
+ <div class="card"><div class="mu">Mavzu</div><div class="row">${[["auto","Avto"],["dark","Qorongʻi"],["light","Yorugʻ"]].map(t=>`<button class="btn ${S.theme==t[0]?"":"g"}" onclick="S.theme='${t[0]}';save();render()">${t[1]}</button>`).join("")}</div></div>
+ <div class="card"><div class="mu">Maʼlumotlar shu qurilma brauzerida saqlanadi. Hisob va bulutli sinxronlash hali yoʻq.</div>
+ <button class="btn g" onclick="if(confirm('Barcha progress oʻchadi. Davom etasizmi?')){S.words.forEach(w=>{w.box=-1;w.ok=w.bad=w.st=0;w.due=0});S.xp=0;S.streak=0;S.log={};save();render()}">Progressni tiklash</button></div><div class="card"><div class="mu">Zaxira nusxa</div><textarea id="bk" placeholder="Zaxira shu yerda chiqadi yoki oldingi zaxirani joylashtiring"></textarea><div class="row"><button class="btn g" onclick="$('#bk').value=JSON.stringify(S)">Zaxira olish</button><button class="btn g" onclick="rs()">Tiklash</button></div></div>`}
+if(!S.seeded&&!S.words.length){addWords(SEED);S.seeded=1;save()}
+S.packs=S.packs||[];for(const k in PACKS)if(!S.packs.includes(k)){addWords(PACKS[k]);S.packs.push(k)}save();
+render();
+</script></body></html>
